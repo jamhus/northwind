@@ -7,10 +7,10 @@ type Props = {
 };
 
 export default function Pagination({ page, totalPages, onPageChange }: Props) {
-  // Funktion för att generera sidnummer (med "..." för stora mängder)
+  
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    const maxVisible = 5; // max antal synliga knappar
+    const maxVisible = 5;
     const half = Math.floor(maxVisible / 2);
 
     if (totalPages <= maxVisible) {

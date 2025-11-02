@@ -5,11 +5,7 @@ export interface Product {
   productName: string;
   unitPrice?: number;
   unitsInStock?: number;
-  categoryId?: number;
-  category?: {
-    categoryId: number;
-    categoryName: string;
-  };
+  categoryName: string;
 }
 
 

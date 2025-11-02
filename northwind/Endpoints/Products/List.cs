@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Northwind.Helpers;
 using Northwind.Models;
 
@@ -18,7 +19,16 @@ namespace Northwind.Endpoints.Products
             CancellationToken ct = default)
         {
             var result = await _db.Products
+                .Include(p => p.Category)
                 .OrderBy(p => p.ProductId)
+                .Select(p => new ProductDto
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    UnitPrice = p.UnitPrice,
+                    UnitsInStock = p.UnitsInStock,
+                    CategoryName = p.Category.CategoryName
+                })
                 .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
             return Ok(result);
