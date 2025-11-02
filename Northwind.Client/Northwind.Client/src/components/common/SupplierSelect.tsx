@@ -4,13 +4,13 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, Check, ChevronDown } from "lucide-react";
 import { supplierService, type Supplier } from "../../api/supplier.service";
+import { useSyncedSelection } from "../../hooks/useSyncedSelectionHook";
 
 type Props = {
-  value: number | undefined;
+  value: number;
   onChange: (supplier: Supplier) => void;
   className?: string;
 };
@@ -30,20 +30,11 @@ export default function SupplierSelect({
     queryFn: supplierService.getAll,
   });
   
-  const [selected, setSelected] = useState<Supplier | undefined>(undefined);
-
-useEffect(() => {
-  if (!suppliers || suppliers.length === 0) return; // inget att göra ännu
-
-  // om value finns, hitta matchande leverantör
-  if (value != null) {
-    const found = suppliers.find((s) => s.supplierId === value);
-    setSelected(found ?? undefined);
-  } else {
-    setSelected(undefined);
-  }
-}, [value, suppliers]);
-
+ const { selected, setSelected } = useSyncedSelection<Supplier>(
+    suppliers,
+    value,
+    "supplierId"
+  );
 
   const handleChange = (supplier: Supplier) => {
     setSelected(supplier);
@@ -65,7 +56,7 @@ useEffect(() => {
     );
 
   return (
-    <Listbox value={selected} onChange={handleChange}>
+    <Listbox value={selected ?? suppliers[0]} onChange={handleChange}>
       {({ open }) => (
         <div className={`relative ${className}`}>
           {/* Dropdown-knappen */}

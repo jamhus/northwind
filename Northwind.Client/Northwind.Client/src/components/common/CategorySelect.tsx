@@ -4,14 +4,14 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronDown } from "lucide-react";
 import { categoryIcons } from "../../assets/icons";
 import { categoryService, type Category } from "../../api/category.service";
+import { useSyncedSelection } from "../../hooks/useSyncedSelectionHook";
 
 type Props = {
-  value: number | undefined; 
+  value: number; 
   onChange: (category: Category) => void;
   className?: string;
 };
@@ -26,20 +26,11 @@ export default function CategorySelect({ value, onChange, className = "" }: Prop
     queryFn: categoryService.getAll,
   });
 
-  const [selected, setSelected] = useState<Category | undefined>(undefined);
-
-  useEffect(() => {
-  if (!categories || categories.length === 0) return; // inget att göra ännu
-
-  // om value finns, hitta matchande kategori
-  if (value != null) {
-    const found = categories.find((c) => c.categoryId === value);
-    setSelected(found ?? undefined);
-  } else {
-    setSelected(undefined);
-  }
-}, [value, categories]);
-
+  const { selected, setSelected } = useSyncedSelection<Category>(
+    categories,
+    value,
+    "categoryId"
+  );
 
   const handleChange = (category: Category) => {
     setSelected(category);
@@ -61,7 +52,7 @@ export default function CategorySelect({ value, onChange, className = "" }: Prop
     );
 
   return (
-    <Listbox value={selected} onChange={handleChange}>
+    <Listbox value={selected ?? categories[0]} onChange={handleChange}>
       {({ open }) => (
         <div className={`relative ${className}`}>
           <ListboxButton className="flex justify-between items-center w-full border rounded p-2 bg-white hover:border-gray-400">
@@ -72,7 +63,7 @@ export default function CategorySelect({ value, onChange, className = "" }: Prop
                   <span>{selected.categoryName}</span>
                 </>
               ) : (
-                <span className="text-gray-400">Välj kategori...</span>
+                <span className="text-gray-400">Välj kategori..</span>
               )}
             </div>
             <ChevronDown size={16} className="text-gray-500" />
