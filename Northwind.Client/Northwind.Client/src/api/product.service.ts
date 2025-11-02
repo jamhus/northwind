@@ -1,4 +1,4 @@
-import api from "././axios.client";
+import api, { type PagedResult } from "././axios.client";
 
 export interface Product {
   productId: number;
@@ -17,8 +17,10 @@ export const productService = {
   /**
    * Hämtar alla produkter (GET /api/products)
    */
-  async getAll(): Promise<Product[]> {
-    const response = await api.get<Product[]>("/products");
+  async getAll(page: number, pageSize: number): Promise<PagedResult<Product>> {
+    const response = await  api.get<PagedResult<Product>>("/products", {
+      params: { page, pageSize },
+    });
     return response.data;
   },
 

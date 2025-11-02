@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loader from "../components/common/loader";
-import { productService, type Product } from "../api/product.service";
+import { productService } from "../api/product.service";
+import { useQuery } from "@tanstack/react-query";
+import Pagination from "../components/common/pagination";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  useEffect(() => {
-    productService.getAll()
-      .then(setProducts)
-      .finally(() => setLoading(false));
-  }, []);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["products", page],
+    queryFn: () => productService.getAll(page, pageSize),
+  });
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
 
+  if (isError) return <div>Det gick inte att hämta produkter.</div>;
+  const products = data?.items || [];
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-semibold mb-4">Produkter ({products.length})</h2>
+      <h2 className="text-2xl font-semibold mb-4">Produkter</h2>
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-100 text-left">
@@ -37,6 +40,12 @@ export default function ProductsPage() {
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        page={data?.page ?? 1}
+        totalPages={data?.totalPages ?? 1}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

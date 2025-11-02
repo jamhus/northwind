@@ -5,5 +5,13 @@ const axiosClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+export type PagedResult<T> = {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+};
+
 export default axiosClient;
     

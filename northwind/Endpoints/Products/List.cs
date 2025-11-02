@@ -1,33 +1,27 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Northwind.Helpers;
 using Northwind.Models;
 
 namespace Northwind.Endpoints.Products
 {
-    public class List : EndpointBaseAsync
-    .WithoutRequest
-    .WithActionResult<List<ProductDto>>
+    public class GetAll : EndpointBaseAsync
+     .WithRequest<ListRequest>
+     .WithActionResult<PagedResult<Product>>
     {
         private readonly NorthwindContext _db;
-        public List(NorthwindContext db) => _db = db;
+        public GetAll(NorthwindContext db) => _db = db;
 
-        [HttpGet("api/products")]
-        public override async Task<ActionResult<List<ProductDto>>> HandleAsync(CancellationToken ct = default)
+        [HttpGet("api/products", Name = nameof(GetAll))]
+        public override async Task<ActionResult<PagedResult<Product>>> HandleAsync(
+            [FromQuery] ListRequest request,
+            CancellationToken ct = default)
         {
-            var products = await _db.Products
-                .Include(p => p.Category)
-                .Select(p => new ProductDto
-                {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    UnitPrice = p.UnitPrice,
-                    UnitsInStock = p.UnitsInStock,
-                    CategoryName = p.Category != null ? p.Category.CategoryName : null
-                })
-                .ToListAsync(ct);
+            var result = await _db.Products
+                .OrderBy(p => p.ProductId)
+                .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
-            return Ok(products);
+            return Ok(result);
         }
     }
 

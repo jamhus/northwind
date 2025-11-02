@@ -7,12 +7,16 @@ import Footer from "../components/layout/Footer";
 export default function AppRoutes() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/products" element={<ProductsPage />} />
-      </Routes>
-      <Footer />
+      <div className="app flex flex-col min-h-screen justify-between">
+        <div>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductsPage />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }
