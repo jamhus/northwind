@@ -22,6 +22,7 @@ namespace Northwind.Endpoints.Products
         {
             var result = await _db.Products
                 .Include(p => p.Category)
+                .Include(p => p.Supplier)
                 .OrderBy(p => p.ProductId)
                 .Select(p => new ProductDto
                 {
@@ -29,7 +30,10 @@ namespace Northwind.Endpoints.Products
                     ProductName = p.ProductName,
                     UnitPrice = p.UnitPrice,
                     UnitsInStock = p.UnitsInStock,
-                    CategoryName = p.Category.CategoryName
+                    CategoryName = p.Category.CategoryName,
+                    CategoryId = (int)p.CategoryId,
+                    SupplierName = p.Supplier.CompanyName,
+                    SupplierId = (int)p.SupplierId
                 })
                 .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
@@ -44,5 +48,8 @@ namespace Northwind.Endpoints.Products
         public decimal? UnitPrice { get; set; }
         public short? UnitsInStock { get; set; }
         public string CategoryName { get; set; }
+        public int CategoryId { get; set; }
+        public string SupplierName { get; set; }
+        public int SupplierId { get; set; }
     }
 }

@@ -6,57 +6,61 @@ import {
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ChevronDown } from "lucide-react";
-import { categoryService, type Category } from "../../api/category.service";
-import { categoryIcons } from "../../assets/icons";
+import { Building2, Check, ChevronDown } from "lucide-react";
+import { supplierService, type Supplier } from "../../api/supplier.service";
 
 type Props = {
-  value: number | undefined; 
-  onChange: (category: Category) => void;
+  value: number | undefined;
+  onChange: (supplier: Supplier) => void;
   className?: string;
 };
 
-export default function CategorySelect({ value, onChange, className = "" }: Props) {
+export default function SupplierSelect({
+  value,
+  onChange,
+  className = "",
+}: Props) {
+
   const {
-    data: categories = [],
+    data: suppliers = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["categories"],
-    queryFn: categoryService.getAll,
+    queryKey: ["suppliers"],
+    queryFn: supplierService.getAll,
   });
+  
+  const [selected, setSelected] = useState<Supplier | undefined>(undefined);
 
-  const [selected, setSelected] = useState<Category | undefined>(undefined);
+useEffect(() => {
+  if (!suppliers || suppliers.length === 0) return; // inget att göra ännu
 
-  useEffect(() => {
-  if (!categories || categories.length === 0) return; // inget att göra ännu
-
-  // om value finns, hitta matchande kategori
+  // om value finns, hitta matchande leverantör
   if (value != null) {
-    const found = categories.find((c) => c.categoryId === value);
+    const found = suppliers.find((s) => s.supplierId === value);
     setSelected(found ?? undefined);
   } else {
     setSelected(undefined);
   }
-}, [value, categories]);
+}, [value, suppliers]);
 
 
-  const handleChange = (category: Category) => {
-    setSelected(category);
-    onChange(category);
+  const handleChange = (supplier: Supplier) => {
+    setSelected(supplier);
+    onChange(supplier);
   };
 
   if (isLoading)
     return (
       <div className="border rounded p-2 text-gray-500 text-sm bg-gray-50">
-        Laddar kategorier...
+        Laddar...
       </div>
     );
 
   if (isError)
     return (
       <div className="border rounded p-2 text-red-500 text-sm bg-red-50">
-        Kunde inte hämta kategorier
+        Kunde inte hämta leverantörer
       </div>
     );
 
@@ -64,37 +68,43 @@ export default function CategorySelect({ value, onChange, className = "" }: Prop
     <Listbox value={selected} onChange={handleChange}>
       {({ open }) => (
         <div className={`relative ${className}`}>
+          {/* Dropdown-knappen */}
           <ListboxButton className="flex justify-between items-center w-full border rounded p-2 bg-white hover:border-gray-400">
             <div className="flex items-center gap-2">
               {selected ? (
                 <>
-                  {categoryIcons[selected.categoryName] ?? categoryIcons.default}
-                  <span>{selected.categoryName}</span>
+                  <Building2 className="text-blue-500" size={18} />
+                  <span>{selected.supplierName}</span>
                 </>
               ) : (
-                <span className="text-gray-400">Välj kategori...</span>
+                <span className="text-gray-400">Välj leverantör...</span>
               )}
             </div>
             <ChevronDown size={16} className="text-gray-500" />
           </ListboxButton>
 
+          {/* Alternativ */}
           {open && (
             <ListboxOptions className="absolute mt-1 w-full bg-white shadow-lg border rounded max-h-60 overflow-auto z-50">
-              {categories.map((c) => (
+              {suppliers.map((s) => (
                 <ListboxOption
-                  key={c.categoryId}
-                  value={c}
+                  key={s.supplierId}
+                  value={s}
                   className={({ active }) =>
-                    `cursor-pointer flex items-center gap-2 px-3 py-2 ${
+                    `cursor-pointer flex items-center justify-between px-3 py-2 ${
                       active ? "bg-blue-100" : ""
                     }`
                   }
                 >
                   {({ selected }) => (
                     <>
-                      {categoryIcons[c.categoryName] ?? categoryIcons.default}
-                      <span className="flex-1">{c.categoryName}</span>
-                      {selected && <Check className="text-blue-600" size={16} />}
+                      <div className="flex items-center gap-2">
+                        <Building2 className="text-blue-500" size={16} />
+                        <span>{s.supplierName}</span>
+                      </div>
+                      {selected && (
+                        <Check className="text-blue-600" size={16} />
+                      )}
                     </>
                   )}
                 </ListboxOption>

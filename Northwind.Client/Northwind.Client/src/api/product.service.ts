@@ -5,7 +5,11 @@ export interface Product {
   unitPrice?: number;
   unitsInStock?: number;
   categoryName: string;
+  supplierName: string;
+  categoryId: number;
+  supplierId: number;
 }
+
 
 export const productService = {
 

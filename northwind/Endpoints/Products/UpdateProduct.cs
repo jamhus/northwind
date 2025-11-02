@@ -20,6 +20,7 @@ public class UpdateProduct : EndpointBaseAsync
     {
         var product = await _db.Products
             .Include(p => p.Category)
+            .Include(p => p.Supplier)
             .FirstOrDefaultAsync(p => p.ProductId == request.Id, ct);
 
         if (product is null)
@@ -30,6 +31,7 @@ public class UpdateProduct : EndpointBaseAsync
         product.UnitPrice = request.Model.UnitPrice;
         product.UnitsInStock = request.Model.UnitsInStock;
         product.CategoryId = request.Model.CategoryId;
+        product.SupplierId = request.Model.SupplierId;
 
         await _db.SaveChangesAsync(ct);
 
@@ -39,7 +41,8 @@ public class UpdateProduct : EndpointBaseAsync
             ProductName = product.ProductName!,
             UnitPrice = product.UnitPrice,
             UnitsInStock = product.UnitsInStock,
-            CategoryName = product.Category?.CategoryName ?? ""
+            CategoryName = product.Category?.CategoryName ?? "",
+            SupplierName = product.Supplier?.CompanyName ?? ""
         };
 
         return Ok(dto);
@@ -68,4 +71,6 @@ public class CreateOrUpdateProductDto
 
     [FromBody]
     public int? CategoryId { get; set; }
+    [FromBody]
+    public int? SupplierId { get; set; }
 }

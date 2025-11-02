@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Product } from "../../../api/product.service";
 import ModalWrapper from "./ModalWrapper";
-import { useQuery } from "@tanstack/react-query";
-import { categoryService } from "../../../api/category.service";
 import CategorySelect from "../../../components/common/CategorySelect";
+import type { Product } from "../../../api/product.service";
+import SupplierSelect from "../../../components/common/SupplierSelect";
 
 type Props = {
   product: Product | null;
@@ -12,7 +11,7 @@ type Props = {
   onSave: (updated: Product) => void;
 };
 
-export default function EditProductModal({
+export default function UpsertProductModal({
   product,
   isOpen,
   onClose,
@@ -23,15 +22,13 @@ export default function EditProductModal({
     productName: "",
     unitPrice: 0,
     unitsInStock: 0,
+    categoryId: 0,
     categoryName: "",
+    supplierId: 0,
+    supplierName: "",
   };
 
   const [form, setForm] = useState<Product>(empty);
-
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: categoryService.getAll,
-  });
 
   useEffect(() => {
     if (product && isOpen) setForm(product);
@@ -96,17 +93,29 @@ export default function EditProductModal({
           <span className="text-sm text-gray-600">Kategori</span>
           <CategorySelect
             value={
-              categories.find((c) => c.categoryName === form.categoryName) ??
-              undefined
+              form.categoryId
             }
             onChange={(cat) =>
               setForm((prev) => ({
                 ...prev,
-                categoryName: cat.categoryName,
                 categoryId: cat.categoryId,
               }))
             }
-            categories={categories}
+          />
+        </label>
+
+         <label>
+          <span className="text-sm text-gray-600">Leverantör</span>
+          <SupplierSelect
+            value={
+              form.supplierId
+            }
+            onChange={(supplier) =>
+              setForm((prev) => ({  
+                ...prev,
+                supplierId: supplier.supplierId,
+              }))
+            }
           />
         </label>
 

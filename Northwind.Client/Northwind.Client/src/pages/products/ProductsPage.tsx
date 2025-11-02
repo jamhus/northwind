@@ -4,7 +4,7 @@ import { productService, type Product } from "../../api/product.service";
 import { useQuery } from "@tanstack/react-query";
 import Pagination from "../../components/common/pagination";
 import Table from "../../components/common/table";
-import EditProductModal from "./modals/EditProductModal";
+import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
 import { categoryIcons } from "../../assets/icons";
 
@@ -21,6 +21,7 @@ export default function ProductsPage() {
   });
 
   const handleAdd = () => alert("Lägg till ny produkt");
+  
   const handleEdit = (p: Product) => {
     setSelectedProduct(p);
     setEditOpen(true);
@@ -51,11 +52,11 @@ export default function ProductsPage() {
         data={products}
         columns={[
           { key: "id", label: "ID", width: "40px" },
-          { key: "productName", label: "Produktnamn", width: "25%" },
+          { key: "productName", label: "Produktnamn", width: "20%" },
           {
             key: "categoryName",
             label: "Kategori",
-            width: "25%",
+            width: "20%",
             render: (p: Product) => (
               <div className="flex items-center gap-2">
                 {categoryIcons[p.categoryName] ?? categoryIcons.default}
@@ -63,8 +64,9 @@ export default function ProductsPage() {
               </div>
             ),
           },
-          { key: "unitPrice", label: "Pris", width: "25%", prefix: "kr" },
-          { key: "unitsInStock", label: "Lager", width: "25%" },
+          { key: "supplierName", label: "Leverantör", width: "20%" },
+          { key: "unitPrice", label: "Pris", width: "20%", prefix: "kr" },
+          { key: "unitsInStock", label: "Lager", width: "20%" },
         ]}
         onAdd={handleAdd}
         onEdit={handleEdit}
@@ -77,7 +79,7 @@ export default function ProductsPage() {
         onPageChange={setPage}
       />
 
-      <EditProductModal
+      <UpsertProductModal
         product={selectedProduct}
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
