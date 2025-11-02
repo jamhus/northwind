@@ -7,8 +7,8 @@ import {
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronDown } from "lucide-react";
-import { categoryService, type Category } from "../../api/category.service";
 import { categoryIcons } from "../../assets/icons";
+import { categoryService, type Category } from "../../api/category.service";
 
 type Props = {
   value: number | undefined; 

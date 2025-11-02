@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Loader from "../../components/common/loader";
-import { productService, type Product } from "../../api/product.service";
 import { useQuery } from "@tanstack/react-query";
-import Pagination from "../../components/common/pagination";
 import Table from "../../components/common/table";
+import { categoryIcons } from "../../assets/icons";
+import Loader from "../../components/common/loader";
+import Pagination from "../../components/common/pagination";
 import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
-import { categoryIcons } from "../../assets/icons";
+import { productService, type Product } from "../../api/product.service";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -21,7 +21,7 @@ export default function ProductsPage() {
   });
 
   const handleAdd = () => alert("Lägg till ny produkt");
-  
+
   const handleEdit = (p: Product) => {
     setSelectedProduct(p);
     setEditOpen(true);

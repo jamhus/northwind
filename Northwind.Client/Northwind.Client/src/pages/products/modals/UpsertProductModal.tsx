@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import ModalWrapper from "./ModalWrapper";
-import CategorySelect from "../../../components/common/CategorySelect";
+import { useEffect, useState } from "react";
 import type { Product } from "../../../api/product.service";
+import CategorySelect from "../../../components/common/CategorySelect";
 import SupplierSelect from "../../../components/common/SupplierSelect";
 
 type Props = {

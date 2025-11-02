@@ -1,6 +1,6 @@
 import Modal from "react-modal";
-import { motion, AnimatePresence } from "framer-motion";
 import type { ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ModalWrapperProps = {
   isOpen: boolean;

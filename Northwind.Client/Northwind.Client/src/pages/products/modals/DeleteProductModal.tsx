@@ -1,5 +1,5 @@
-import type { Product } from "../../../api/product.service";
 import ModalWrapper from "./ModalWrapper";
+import type { Product } from "../../../api/product.service";
 
 type Props = {
   product: Product | null;

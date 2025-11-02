@@ -1,13 +1,13 @@
 import api, { type PagedResult } from "././axios.client";
 export interface Product {
   id: number;
-  productName: string;
   unitPrice?: number;
-  unitsInStock?: number;
-  categoryName: string;
-  supplierName: string;
   categoryId: number;
   supplierId: number;
+  productName: string;
+  categoryName: string;
+  supplierName: string;
+  unitsInStock?: number;
 }
 
 
