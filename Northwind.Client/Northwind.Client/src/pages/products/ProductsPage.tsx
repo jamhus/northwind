@@ -6,6 +6,7 @@ import Pagination from "../../components/common/pagination";
 import Table from "../../components/common/table";
 import EditProductModal from "./modals/EditProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
+import { categoryIcons } from "../../assets/icons";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -14,12 +15,12 @@ export default function ProductsPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const pageSize = 10;
 
- const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["products", page],
     queryFn: () => productService.getAll(page, pageSize),
   });
 
-const handleAdd = () => alert("Lägg till ny produkt");
+  const handleAdd = () => alert("Lägg till ny produkt");
   const handleEdit = (p: Product) => {
     setSelectedProduct(p);
     setEditOpen(true);
@@ -30,14 +31,12 @@ const handleAdd = () => alert("Lägg till ny produkt");
   };
 
   const handleSave = async (updated: Product) => {
-    console.log("Saving product:", updated);
     await productService.update(updated);
     await refetch();
   };
 
   const handleConfirmDelete = async (p: Product) => {
-    console.log("Deleting:", p);
-    // await productService.delete(p.id);
+    await productService.delete(p.id);
     await refetch();
   };
 
@@ -47,19 +46,29 @@ const handleAdd = () => alert("Lägg till ny produkt");
   const products = data?.items || [];
   return (
     <div className="p-8">
-        <Table<Product>
-          title="Produkter"
-          data={products}
-          columns={[
-            { key: "id", label: "ID", width: "40px" },
-            { key: "productName", label: "Produktnamn", width: "25%" },
-            { key: "categoryName", label: "Kategori", width: "25%" },
-            { key: "unitPrice", label: "Pris", width: "25%" , prefix: "kr" },
-            { key: "unitsInStock", label: "Lager", width: "25%" },
-          ]}
-          onAdd={handleAdd}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+      <Table<Product>
+        title="Produkter"
+        data={products}
+        columns={[
+          { key: "id", label: "ID", width: "40px" },
+          { key: "productName", label: "Produktnamn", width: "25%" },
+          {
+            key: "categoryName",
+            label: "Kategori",
+            width: "25%",
+            render: (p: Product) => (
+              <div className="flex items-center gap-2">
+                {categoryIcons[p.categoryName] ?? categoryIcons.default}
+                <span>{p.categoryName}</span>
+              </div>
+            ),
+          },
+          { key: "unitPrice", label: "Pris", width: "25%", prefix: "kr" },
+          { key: "unitsInStock", label: "Lager", width: "25%" },
+        ]}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
       <Pagination

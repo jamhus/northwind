@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../../../api/product.service";
 import ModalWrapper from "./ModalWrapper";
+import { useQuery } from "@tanstack/react-query";
+import { categoryService } from "../../../api/category.service";
+import CategorySelect from "../../../components/common/CategorySelect";
 
 type Props = {
   product: Product | null;
@@ -25,15 +28,27 @@ export default function EditProductModal({
 
   const [form, setForm] = useState<Product>(empty);
 
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: categoryService.getAll,
+  });
+
   useEffect(() => {
     if (product && isOpen) setForm(product);
   }, [product, isOpen]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: name === "unitPrice" ? parseFloat(value) : value,
+      [name]:
+        name === "unitPrice"
+          ? parseFloat(value)
+          : name === "unitsInStock"
+          ? parseInt(value)
+          : value,
     }));
   };
 
@@ -74,6 +89,24 @@ export default function EditProductModal({
             value={form.unitsInStock ?? ""}
             onChange={handleChange}
             className="w-full border p-2 rounded"
+          />
+        </label>
+
+        <label>
+          <span className="text-sm text-gray-600">Kategori</span>
+          <CategorySelect
+            value={
+              categories.find((c) => c.categoryName === form.categoryName) ??
+              undefined
+            }
+            onChange={(cat) =>
+              setForm((prev) => ({
+                ...prev,
+                categoryName: cat.categoryName,
+                categoryId: cat.categoryId,
+              }))
+            }
+            categories={categories}
           />
         </label>
 

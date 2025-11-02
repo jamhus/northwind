@@ -4,14 +4,14 @@ using Northwind.Models;
 
 namespace Northwind.Endpoints.Products
 {
-    public class GetById : EndpointBaseAsync
+    public class GetProductById : EndpointBaseAsync
      .WithRequest<int>
      .WithActionResult<Product>
     {
         private readonly NorthwindContext _db;
-        public GetById(NorthwindContext db) => _db = db;
+        public GetProductById(NorthwindContext db) => _db = db;
 
-        [HttpGet("api/products/{id}", Name = nameof(GetById))]
+        [HttpGet("api/products/{id}", Name = nameof(GetProductById))]
         public override async Task<ActionResult<Product>> HandleAsync(int id, CancellationToken ct = default)
         {
             var product = await _db.Products.FindAsync(new object[] { id }, ct);

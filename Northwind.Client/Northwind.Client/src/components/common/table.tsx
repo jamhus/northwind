@@ -2,7 +2,7 @@ import { Edit, Trash2, Plus } from "lucide-react";
 
 type TableProps<T> = {
   data: T[];
-  columns: { key: keyof T; label: string, width?: string, prefix?: string }[];
+  columns: { key: keyof T; label: string, width?: string, prefix?: string, render?: (item: T) => React.ReactNode; }[];
   onAdd?: () => void;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
@@ -57,10 +57,10 @@ export default function Table<T extends object>({
                   className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition"
                 >
                   {columns.map((col) => (
-                    <td key={String(col.key)} className="p-3 border-b">
-                      {item[col.key] != null ? String(item[col.key]) : "-"} {col.prefix && col.prefix}
-                    </td>
-                  ))}
+                <td key={String(col.key)} className="p-3">
+                  {col.render ? col.render(item) : (item[col.key as keyof T] as React.ReactNode)} {col.prefix && col.prefix}
+                </td>
+              ))}
                   {(onEdit || onDelete) && (
                     <td className="p-3 border-b">
                       <div className="flex gap-3">

@@ -1,5 +1,4 @@
 import api, { type PagedResult } from "././axios.client";
-
 export interface Product {
   id: number;
   productName: string;
@@ -7,7 +6,6 @@ export interface Product {
   unitsInStock?: number;
   categoryName: string;
 }
-
 
 export const productService = {
 
@@ -38,13 +36,4 @@ export const productService = {
   },
 };
 
-/**
- * Exempel på användning av productService:
- * 
- * const products = await productService.getAll();
- * const single = await productService.getById(1);
- * await productService.create({ productName: "New Product", unitPrice: 19.99 });
- * await productService.update(1, { unitPrice: 25 });
- * await productService.delete(2);
- */
 export default productService;

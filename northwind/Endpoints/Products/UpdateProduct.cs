@@ -6,14 +6,14 @@ using Northwind.Models;
 
 namespace Northwind.Endpoints.Products;
 
-public class Update : EndpointBaseAsync
+public class UpdateProduct : EndpointBaseAsync
     .WithRequest<UpdateProductRequest>
     .WithActionResult<ProductDto>
 {
     private readonly NorthwindContext _db;
-    public Update(NorthwindContext db) => _db = db;
+    public UpdateProduct(NorthwindContext db) => _db = db;
 
-    [HttpPut("api/products/{id}", Name = nameof(Update))]
+    [HttpPut("api/products/{id}", Name = nameof(UpdateProduct))]
     public override async Task<ActionResult<ProductDto>> HandleAsync(
         [FromMultiSource] UpdateProductRequest request,
         CancellationToken ct = default)

@@ -6,14 +6,14 @@ using Northwind.Models;
 
 namespace Northwind.Endpoints.Products
 {
-    public class GetAll : EndpointBaseAsync
+    public class GetAllProducts : EndpointBaseAsync
      .WithRequest<ListRequest>
      .WithActionResult<PagedResult<Product>>
     {
         private readonly NorthwindContext _db;
-        public GetAll(NorthwindContext db) => _db = db;
+        public GetAllProducts(NorthwindContext db) => _db = db;
 
-        [HttpGet("api/products", Name = nameof(GetAll))]
+        [HttpGet("api/products", Name = nameof(GetAllProducts))]
         [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
 
         public override async Task<ActionResult<PagedResult<Product>>> HandleAsync(
