@@ -39,8 +39,8 @@ export const productService = {
   /**
    * Uppdaterar en befintlig produkt (PUT /api/products/{id})
    */
-  async update(id: number, product: Partial<Product>): Promise<void> {
-    await api.put(`/products/${id}`, product);
+  async update(product: Partial<Product>): Promise<void> {
+    await api.put(`/products/${product.productId}`, product);
   },
 
   /**

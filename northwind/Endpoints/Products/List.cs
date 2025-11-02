@@ -14,6 +14,8 @@ namespace Northwind.Endpoints.Products
         public GetAll(NorthwindContext db) => _db = db;
 
         [HttpGet("api/products", Name = nameof(GetAll))]
+        [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
+
         public override async Task<ActionResult<PagedResult<Product>>> HandleAsync(
             [FromQuery] ListRequest request,
             CancellationToken ct = default)

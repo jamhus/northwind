@@ -2,7 +2,7 @@ import { Edit, Trash2, Plus } from "lucide-react";
 
 type TableProps<T> = {
   data: T[];
-  columns: { key: keyof T; label: string, width?: string }[];
+  columns: { key: keyof T; label: string, width?: string, prefix?: string }[];
   onAdd?: () => void;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
@@ -58,7 +58,7 @@ export default function Table<T extends object>({
                 >
                   {columns.map((col) => (
                     <td key={String(col.key)} className="p-3 border-b">
-                      {item[col.key] != null ? String(item[col.key]) : "-"}
+                      {item[col.key] != null ? String(item[col.key]) : "-"} {col.prefix && col.prefix}
                     </td>
                   ))}
                   {(onEdit || onDelete) && (
