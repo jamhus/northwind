@@ -1,18 +1,22 @@
 import type { Product } from "../../../api/product.service";
-import Modal from "../../../components/common/Modal";
+import ModalWrapper from "./ModalWrapper";
 
 type Props = {
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (product: Product) => void;
+  onConfirm: (p: Product) => void;
 };
 
 export default function DeleteProductModal({ product, isOpen, onClose, onConfirm }: Props) {
   if (!product) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Radera produkt">
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <h2 className="text-lg font-semibold mb-3 text-red-600">Radera produkt</h2>
       <p className="text-gray-700">
         Är du säker på att du vill radera <strong>{product.productName}</strong>?
       </p>
@@ -31,6 +35,6 @@ export default function DeleteProductModal({ product, isOpen, onClose, onConfirm
           Ja, radera
         </button>
       </div>
-    </Modal>
+    </ModalWrapper>
   );
 }

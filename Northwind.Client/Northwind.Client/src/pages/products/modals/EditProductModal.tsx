@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../../../api/product.service";
-import Modal from "../../../components/common/Modal";
+import ModalWrapper from "./ModalWrapper";
 
 type Props = {
   product: Product | null;
@@ -9,24 +9,24 @@ type Props = {
   onSave: (updated: Product) => void;
 };
 
-export default function EditProductModal({ product, isOpen, onClose, onSave }: Props) {
-  const emptyProduct: Product = {
-    productId: 0,
+export default function EditProductModal({
+  product,
+  isOpen,
+  onClose,
+  onSave,
+}: Props) {
+  const empty: Product = {
+    id: 0,
     productName: "",
     unitPrice: 0,
     unitsInStock: 0,
     categoryName: "",
   };
 
-  const [form, setForm] = useState<Product>(emptyProduct);
-
+  const [form, setForm] = useState<Product>(empty);
 
   useEffect(() => {
-    if (product && isOpen) {
-      setForm(product);
-    } else if (!isOpen) {
-      setForm(emptyProduct);
-    }
+    if (product && isOpen) setForm(product);
   }, [product, isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,15 +42,12 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }: P
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Redigera produkt">
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Redigera produkt">
       <div className="flex flex-col gap-3">
         <label>
           <span className="text-sm text-gray-600">Produktnamn</span>
           <input
-            type="text"
             name="productName"
             value={form.productName}
             onChange={handleChange}
@@ -92,6 +89,6 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }: P
           </button>
         </div>
       </div>
-    </Modal>
+    </ModalWrapper>
   );
 }

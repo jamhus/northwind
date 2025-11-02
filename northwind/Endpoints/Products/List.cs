@@ -25,7 +25,7 @@ namespace Northwind.Endpoints.Products
                 .OrderBy(p => p.ProductId)
                 .Select(p => new ProductDto
                 {
-                    ProductId = p.ProductId,
+                    Id = p.ProductId,
                     ProductName = p.ProductName,
                     UnitPrice = p.UnitPrice,
                     UnitsInStock = p.UnitsInStock,
@@ -39,7 +39,7 @@ namespace Northwind.Endpoints.Products
 
     public class ProductDto
     {
-        public int ProductId { get; set; }
+        public int Id { get; set; }
         public string ProductName { get; set; }
         public decimal? UnitPrice { get; set; }
         public short? UnitsInStock { get; set; }

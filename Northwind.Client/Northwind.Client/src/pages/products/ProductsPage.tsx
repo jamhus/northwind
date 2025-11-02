@@ -37,7 +37,7 @@ const handleAdd = () => alert("Lägg till ny produkt");
 
   const handleConfirmDelete = async (p: Product) => {
     console.log("Deleting:", p);
-    // await productService.delete(p.productId);
+    // await productService.delete(p.id);
     await refetch();
   };
 
@@ -51,7 +51,7 @@ const handleAdd = () => alert("Lägg till ny produkt");
           title="Produkter"
           data={products}
           columns={[
-            { key: "productId", label: "ID", width: "40px" },
+            { key: "id", label: "ID", width: "40px" },
             { key: "productName", label: "Produktnamn", width: "25%" },
             { key: "categoryName", label: "Kategori", width: "25%" },
             { key: "unitPrice", label: "Pris", width: "25%" , prefix: "kr" },

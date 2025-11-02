@@ -1,7 +1,7 @@
 import api, { type PagedResult } from "././axios.client";
 
 export interface Product {
-  productId: number;
+  id: number;
   productName: string;
   unitPrice?: number;
   unitsInStock?: number;
@@ -10,9 +10,7 @@ export interface Product {
 
 
 export const productService = {
-  /**
-   * Hämtar alla produkter (GET /api/products)
-   */
+
   async getAll(page: number, pageSize: number): Promise<PagedResult<Product>> {
     const response = await  api.get<PagedResult<Product>>("/products", {
       params: { page, pageSize },
@@ -20,32 +18,21 @@ export const productService = {
     return response.data;
   },
 
-  /**
-   * Hämtar en specifik produkt via ID (GET /api/products/{id})
-   */
   async getById(id: number): Promise<Product> {
     const response = await api.get<Product>(`/products/${id}`);
     return response.data;
   },
 
-  /**
-   * Skapar en ny produkt (POST /api/products)
-   */
-  async create(product: Omit<Product, "productId">): Promise<Product> {
+  async create(product: Omit<Product, "id">): Promise<Product> {
     const response = await api.post<Product>("/products", product);
     return response.data;
   },
 
-  /**
-   * Uppdaterar en befintlig produkt (PUT /api/products/{id})
-   */
-  async update(product: Partial<Product>): Promise<void> {
-    await api.put(`/products/${product.productId}`, product);
+  async update (product: Partial<Product>) : Promise<Product> {
+    const res = await api.put<Product>(`/products/${product.id}`, product);
+    return res.data;
   },
 
-  /**
-   * Tar bort en produkt (DELETE /api/products/{id})
-   */
   async delete(id: number): Promise<void> {
     await api.delete(`/products/${id}`);
   },
