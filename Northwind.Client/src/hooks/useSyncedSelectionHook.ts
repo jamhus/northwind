@@ -10,7 +10,7 @@ export function useSyncedSelection<T extends Record<string, unknown>>(
   value: number | string | undefined | null,
   key: keyof T
 ) {
-  const [selected, setSelected] = useState<T | undefined>(undefined); // ✅ use undefined
+  const [selected, setSelected] = useState<T | undefined>(undefined);
 
   useEffect(() => {
     if (!items?.length) return;

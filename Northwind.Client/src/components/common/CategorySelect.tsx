@@ -7,8 +7,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronDown } from "lucide-react";
 import { categoryIcons } from "../../assets/icons";
-import { categoryService, type Category } from "../../api/category.service";
 import { useSyncedSelection } from "../../hooks/useSyncedSelectionHook";
+import { categoryService, type Category } from "../../api/category.service";
 
 type Props = {
   value: number; 

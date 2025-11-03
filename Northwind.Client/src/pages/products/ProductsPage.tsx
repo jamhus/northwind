@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Table from "../../components/common/table";
+import Table from "../../components/common/Table";
 import { categoryIcons } from "../../assets/icons";
-import Loader from "../../components/common/loader";
-import Pagination from "../../components/common/pagination";
+import Loader from "../../components/common/Loader";
+import Pagination from "../../components/common/Pagination";
 import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
 import { productService, type Product } from "../../api/product.service";
