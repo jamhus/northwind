@@ -8,6 +8,7 @@ export interface Product {
   categoryName: string;
   supplierName: string;
   unitsInStock?: number;
+  quantityPerUnit?: string;
 }
 
 

@@ -33,7 +33,8 @@ namespace Northwind.Endpoints.Products
                     CategoryName = p.Category.CategoryName,
                     CategoryId = (int)p.CategoryId,
                     SupplierName = p.Supplier.CompanyName,
-                    SupplierId = (int)p.SupplierId
+                    SupplierId = (int)p.SupplierId,
+                    QuantityPerUnit = p.QuantityPerUnit
                 })
                 .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
@@ -51,5 +52,7 @@ namespace Northwind.Endpoints.Products
         public int CategoryId { get; set; }
         public string SupplierName { get; set; }
         public int SupplierId { get; set; }
+        public string? QuantityPerUnit { get; set; }
+
     }
 }

@@ -26,6 +26,7 @@ export default function UpsertProductModal({
     categoryName: "",
     supplierId: 0,
     supplierName: "",
+    quantityPerUnit: "",
   };
 
   const [form, setForm] = useState<Product>(empty);
@@ -51,11 +52,12 @@ export default function UpsertProductModal({
 
   const handleSubmit = () => {
     onSave(form);
+    setForm(empty)
     onClose();
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Redigera produkt">
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title={product ? "Redigera produkt" : "Lägg till produkt"}>
       <div className="flex flex-col gap-3">
         <label>
           <span className="text-sm text-gray-600">Produktnamn</span>
@@ -84,6 +86,16 @@ export default function UpsertProductModal({
             type="number"
             name="unitsInStock"
             value={form.unitsInStock ?? ""}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </label>
+
+        <label>
+          <span className="text-sm text-gray-600">Förpackning</span>
+          <input
+            name="quantityPerUnit"
+            value={form.quantityPerUnit}
             onChange={handleChange}
             className="w-full border p-2 rounded"
           />

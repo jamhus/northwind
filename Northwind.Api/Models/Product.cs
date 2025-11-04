@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Northwind.Models;
+﻿namespace Northwind.Models;
 
 public partial class Product
 {

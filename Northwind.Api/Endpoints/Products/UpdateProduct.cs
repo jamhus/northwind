@@ -42,7 +42,8 @@ public class UpdateProduct : EndpointBaseAsync
             UnitPrice = product.UnitPrice,
             UnitsInStock = product.UnitsInStock,
             CategoryName = product.Category?.CategoryName ?? "",
-            SupplierName = product.Supplier?.CompanyName ?? ""
+            SupplierName = product.Supplier?.CompanyName ?? "",
+            
         };
 
         return Ok(dto);
@@ -60,17 +61,14 @@ public class UpdateProductRequest
 
 public class CreateOrUpdateProductDto
 {
-    [FromBody]
     public string ProductName { get; set; } = "";
 
-    [FromBody]
     public decimal? UnitPrice { get; set; }
 
-    [FromBody]
     public short? UnitsInStock { get; set; }
 
-    [FromBody]
     public int? CategoryId { get; set; }
-    [FromBody]
     public int? SupplierId { get; set; }
+    public string? QuantityPerUnit { get; set; }
+
 }

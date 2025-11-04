@@ -20,7 +20,10 @@ export default function ProductsPage() {
     queryFn: () => productService.getAll(page, pageSize),
   });
 
-  const handleAdd = () => alert("Lägg till ny produkt");
+  const handleAdd = () => {
+    setSelectedProduct(null);
+    setEditOpen(true);
+  };
 
   const handleEdit = (p: Product) => {
     setSelectedProduct(p);
@@ -32,7 +35,8 @@ export default function ProductsPage() {
   };
 
   const handleSave = async (updated: Product) => {
-    await productService.update(updated);
+    if (updated.id) await productService.update(updated);
+    else await productService.create(updated);
     await refetch();
   };
 
@@ -52,11 +56,11 @@ export default function ProductsPage() {
         data={products}
         columns={[
           { key: "id", label: "ID", width: "40px" },
-          { key: "productName", label: "Produktnamn", width: "20%" },
+          { key: "productName", label: "Produktnamn" },
           {
             key: "categoryName",
             label: "Kategori",
-            width: "20%",
+            
             render: (p: Product) => (
               <div className="flex items-center gap-2">
                 {categoryIcons[p.categoryName] ?? categoryIcons.default}
@@ -64,9 +68,10 @@ export default function ProductsPage() {
               </div>
             ),
           },
-          { key: "supplierName", label: "Leverantör", width: "20%" },
-          { key: "unitPrice", label: "Pris", width: "20%", prefix: "kr" },
-          { key: "unitsInStock", label: "Lager", width: "20%" },
+          { key: "supplierName", label: "Leverantör" },
+          { key: "quantityPerUnit", label: "Förpackning" },
+          { key: "unitPrice", label: "Pris",  prefix: "kr" },
+          { key: "unitsInStock", label: "Lager" },
         ]}
         onAdd={handleAdd}
         onEdit={handleEdit}
