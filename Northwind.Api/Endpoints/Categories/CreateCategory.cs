@@ -32,7 +32,7 @@ public class CreateCategory : EndpointBaseAsync
             Description = entity.Description
         };
 
-        return CreatedAtRoute(nameof(CreateCategory), new { id = entity.CategoryId }, dto);
+        return Ok(dto);
     }
 }
 

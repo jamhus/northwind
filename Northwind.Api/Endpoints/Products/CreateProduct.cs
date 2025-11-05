@@ -27,6 +27,6 @@ public class CreateProduct : EndpointBaseAsync
         _db.Products.Add(product);
         await _db.SaveChangesAsync(ct);
 
-        return CreatedAtRoute(nameof(GetProductById), new { id = product.ProductId }, product);
+        return Ok(product);
     }
 }

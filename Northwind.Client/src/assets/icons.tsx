@@ -5,6 +5,7 @@ import {
   Wheat,
   Candy,
   Coffee,
+  Dumbbell,
   Drumstick,
   ShoppingBasket,
   UtensilsCrossed,
@@ -21,4 +22,5 @@ export const categoryIcons: Record<string, JSX.Element> = {
   "Meat/Poultry": <Drumstick className="text-red-500" />,
   "Grains/Cereals": <Wheat className="text-yellow-500" />,
   Condiments: <UtensilsCrossed className="text-orange-600" />,
+  "Workout Supplements": <Dumbbell className="text-purple-500" />,
 };

@@ -38,6 +38,7 @@ export default function CategoriesPage() {
   };
 
   const handleSave = async (updated: Category) => {
+    console.log("Saving category:", updated);
     try {
       if (updated.categoryId) {
         await categoryService.update(updated);
