@@ -23,6 +23,7 @@ public class GetAllCategories : EndpointBaseAsync
                 CategoryName = c.CategoryName,
                 Description = c.Description
             })
+            .OrderByDescending(c => c.CategoryName)
             .ToPagedResultAsync(request.Page, request.PageSize);
 
         return Ok(categories);

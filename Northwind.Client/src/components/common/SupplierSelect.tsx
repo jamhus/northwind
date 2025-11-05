@@ -27,7 +27,7 @@ export default function SupplierSelect({
     isError,
   } = useQuery({
     queryKey: ["suppliers"],
-    queryFn: supplierService.getAll,
+    queryFn: supplierService.getAllForSelect,
   });
   
  const { selected, setSelected } = useSyncedSelection<Supplier>(
@@ -65,7 +65,7 @@ export default function SupplierSelect({
               {selected ? (
                 <>
                   <Building2 className="text-blue-500" size={18} />
-                  <span>{selected.supplierName}</span>
+                  <span>{selected.companyName}</span>
                 </>
               ) : (
                 <span className="text-gray-400">Välj leverantör...</span>
@@ -91,7 +91,7 @@ export default function SupplierSelect({
                     <>
                       <div className="flex items-center gap-2">
                         <Building2 className="text-blue-500" size={16} />
-                        <span>{s.supplierName}</span>
+                        <span>{s.companyName}</span>
                       </div>
                       {selected && (
                         <Check className="text-blue-600" size={16} />

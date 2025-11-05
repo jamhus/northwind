@@ -5,18 +5,18 @@ import { categoryIcons } from "../../assets/icons";
 import Loader from "../../components/common/Loader";
 import { notify } from "../../components/common/Notify";
 import Pagination from "../../components/common/Pagination";
-import { categoryService, type Category } from "../../api/category.service";
 import UpsertCategoryModal from "./modals/UpsertCategoryModal";
 import DeleteCategoryModal from "./modals/DeleteCategoryModal";
+import { categoryService, type Category } from "../../api/category.service";
 
 export default function CategoriesPage() {
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["categories", page],
@@ -99,7 +99,7 @@ export default function CategoriesPage() {
         onPageChange={setPage}
       />
 
-        {editOpen && (
+      {editOpen && (
         <UpsertCategoryModal
           category={selectedCategory}
           isOpen={editOpen}

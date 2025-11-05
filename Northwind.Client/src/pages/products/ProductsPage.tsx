@@ -10,11 +10,11 @@ import { productService, type Product } from "../../api/product.service";
 import { notify } from "../../components/common/Notify";
 
 export default function ProductsPage() {
+  const pageSize = 10;
   const [page, setPage] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const pageSize = 10;
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["products", page],
@@ -83,7 +83,7 @@ export default function ProductsPage() {
               </div>
             ),
           },
-          { key: "supplierName", label: "Leverantör" },
+          { key: "companyName", label: "Leverantör" },
           { key: "quantityPerUnit", label: "Förpackning" },
           { key: "unitPrice", label: "Pris", prefix: "kr" },
           { key: "unitsInStock", label: "Lager" },

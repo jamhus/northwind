@@ -6,7 +6,7 @@ export interface Product {
   supplierId: number;
   productName: string;
   categoryName: string;
-  supplierName: string;
+  companyName: string;
   unitsInStock?: number;
   quantityPerUnit?: string;
 }

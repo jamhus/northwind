@@ -25,7 +25,7 @@ export default function UpsertProductModal({
     categoryId: 0,
     categoryName: "",
     supplierId: 0,
-    supplierName: "",
+    companyName: "",
     quantityPerUnit: "",
   };
 
