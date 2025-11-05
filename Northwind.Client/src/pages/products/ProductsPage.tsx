@@ -7,7 +7,7 @@ import Pagination from "../../components/common/Pagination";
 import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
 import { productService, type Product } from "../../api/product.service";
-import { toast } from "react-hot-toast";
+import { notify } from "../../components/common/Notify";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -36,18 +36,27 @@ export default function ProductsPage() {
   };
 
   const handleSave = async (updated: Product) => {
-    if (updated.id) await productService.update(updated);
-    else await productService.create(updated);
-    await refetch();
+    try {
+      if (updated.id) {
+        await productService.update(updated);
+        notify("Produkten uppdaterades!", "success");
+      } else {
+        await productService.create(updated);
+        notify("Ny produkt skapades!", "success");
+      }
+      await refetch();
+    } catch {
+      notify("Kunde inte spara produkten", "error");
+    }
   };
 
   const handleConfirmDelete = async (p: Product) => {
     try {
       await productService.delete(p.id);
-      toast.success(`"${p.productName}" raderades`);
+      notify(`"${p.productName}" raderades`, "success");
       await refetch();
     } catch {
-      toast.error("Kunde inte radera produkten");
+      notify("Kunde inte radera produkten", "error");
     }
   };
 

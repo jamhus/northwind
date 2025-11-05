@@ -36,6 +36,7 @@ namespace Northwind.Endpoints.Products
                     SupplierId = (int)p.SupplierId,
                     QuantityPerUnit = p.QuantityPerUnit
                 })
+                .OrderByDescending(P => P.Id)
                 .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
             return Ok(result);
