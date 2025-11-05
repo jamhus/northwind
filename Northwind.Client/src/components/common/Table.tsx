@@ -17,6 +17,7 @@ export default function Table<T extends object>({
   onDelete,
   title = "Data",
 }: TableProps<T>) {
+  const shouldShowActions = Boolean(onEdit || onDelete);
   return (
     <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white">
       {/* Header */}
@@ -43,8 +44,8 @@ export default function Table<T extends object>({
                   {col.label}
                 </th>
               ))}
-              {(onEdit || onDelete) && (
-                <th className="p-3 border-b">Actions</th>
+              {shouldShowActions && (
+                <th className="p-3 border-b" style={{ width: "60px" }}>Actions</th>
               )}
             </tr>
           </thead>
