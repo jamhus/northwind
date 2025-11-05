@@ -7,6 +7,7 @@ import Pagination from "../../components/common/Pagination";
 import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
 import { productService, type Product } from "../../api/product.service";
+import { toast } from "react-hot-toast";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -41,8 +42,13 @@ export default function ProductsPage() {
   };
 
   const handleConfirmDelete = async (p: Product) => {
-    await productService.delete(p.id);
-    await refetch();
+    try {
+      await productService.delete(p.id);
+      toast.success(`"${p.productName}" raderades`);
+      await refetch();
+    } catch {
+      toast.error("Kunde inte radera produkten");
+    }
   };
 
   if (isLoading) return <Loader />;
@@ -60,7 +66,7 @@ export default function ProductsPage() {
           {
             key: "categoryName",
             label: "Kategori",
-            
+
             render: (p: Product) => (
               <div className="flex items-center gap-2">
                 {categoryIcons[p.categoryName] ?? categoryIcons.default}
@@ -70,7 +76,7 @@ export default function ProductsPage() {
           },
           { key: "supplierName", label: "Leverantör" },
           { key: "quantityPerUnit", label: "Förpackning" },
-          { key: "unitPrice", label: "Pris",  prefix: "kr" },
+          { key: "unitPrice", label: "Pris", prefix: "kr" },
           { key: "unitsInStock", label: "Lager" },
         ]}
         onAdd={handleAdd}
