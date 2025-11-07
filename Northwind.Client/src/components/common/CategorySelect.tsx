@@ -23,7 +23,7 @@ export default function CategorySelect({ value, onChange, className = "" }: Prop
     isError,
   } = useQuery({
     queryKey: ["categories"],
-    queryFn: categoryService.getAll,
+    queryFn: categoryService.getAllForSelect,
   });
 
   const { selected, setSelected } = useSyncedSelection<Category>(

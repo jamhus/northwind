@@ -13,6 +13,10 @@ export const categoryService = {
     });
     return response.data;
   },
+  getAllForSelect: async (): Promise<Category[]> => {
+    const res = await api.get<Category[]>("/categories/for-select");
+    return res.data;
+  },
   create: async (category: Category): Promise<void> => {
     await api.post("/categories", category);
   },
