@@ -82,30 +82,30 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-async Task SeedAdminAsync(IApplicationBuilder app)
-{
-    using var scope = app.ApplicationServices.CreateScope();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//async Task SeedAdminAsync(IApplicationBuilder app)
+//{
+//    using var scope = app.ApplicationServices.CreateScope();
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    const string adminEmail = "admin@northwind.com";
-    const string adminPassword = "Admin123!";
+//    const string adminEmail = "admin@northwind.com";
+//    const string adminPassword = "Admin123!";
 
-    // Skapa rollen om den inte finns
-    if (!await roleManager.RoleExistsAsync("Admin"))
-        await roleManager.CreateAsync(new IdentityRole("Admin"));
+//    // Skapa rollen om den inte finns
+//    if (!await roleManager.RoleExistsAsync("Admin"))
+//        await roleManager.CreateAsync(new IdentityRole("Admin"));
 
-    // Skapa användaren om den inte finns
-    var user = await userManager.FindByEmailAsync(adminEmail);
-    if (user == null)
-    {
-        user = new ApplicationUser { UserName = adminEmail, Email = adminEmail };
-        await userManager.CreateAsync(user, adminPassword);
-        await userManager.AddToRoleAsync(user, "Admin");
-    }
-}
+//    // Skapa användaren om den inte finns
+//    var user = await userManager.FindByEmailAsync(adminEmail);
+//    if (user == null)
+//    {
+//        user = new ApplicationUser { UserName = adminEmail, Email = adminEmail };
+//        await userManager.CreateAsync(user, adminPassword);
+//        await userManager.AddToRoleAsync(user, "Admin");
+//    }
+//}
 
-await SeedAdminAsync(app);
+//await SeedAdminAsync(app);
 
 app.UseHttpsRedirection();
 

@@ -8,6 +8,7 @@ import SuppliersPage from "../pages/suppliers/SuppliersPage";
 import { RequireRole } from "../components/auth/RequireRole";
 import CategoriesPage from "../pages/categories/CategoriesPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import OrdersPage from "../pages/orders/OrdersPage";
 
 export default function AppRoutes() {
   return (
@@ -32,6 +33,16 @@ export default function AppRoutes() {
               <RequireAuth>
                 <RequireRole roles={["Admin","Supplier","Manager"]}>
                   <ProductsPage />
+                </RequireRole>
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="/orders"
+            element={
+              <RequireAuth>
+                <RequireRole roles={["Admin","Supplier","Manager"]}>
+                  <OrdersPage />
                 </RequireRole>
               </RequireAuth>
             }

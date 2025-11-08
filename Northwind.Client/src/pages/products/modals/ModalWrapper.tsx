@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -7,7 +8,7 @@ type ModalWrapperProps = {
   onClose: () => void;
   children: ReactNode;
   className?: string;
-  width?: string; // t.ex. "max-w-md", "max-w-lg"
+  width?: string;
   title?: string;
 };
 
@@ -16,7 +17,7 @@ export default function ModalWrapper({
   onClose,
   children,
   className = "",
-  width = "max-w-md",
+  width = "w-2xl",
   title,
 }: ModalWrapperProps) {
   return (
@@ -27,7 +28,7 @@ export default function ModalWrapper({
           onRequestClose={onClose}
           shouldCloseOnOverlayClick={true}
           overlayClassName="fixed inset-0 bg-black/20 flex justify-center items-center z-40"
-          className="bg-transparent outline-none border-none flex justify-center items-center"
+          className={`bg-transparent outline-none ${width} border-none flex justify-center items-center`}
         >
           {/* Overlay-animation */}
           <motion.div
@@ -44,7 +45,7 @@ export default function ModalWrapper({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 10 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className={`bg-white rounded-xl p-6 w-full ${width} shadow-xl relative z-50 ${className}`}
+            className={`bg-white rounded-xl p-6 ${width} shadow-xl relative z-50 ${className}`}
           >
             {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
             {children}

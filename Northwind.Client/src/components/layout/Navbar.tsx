@@ -64,6 +64,17 @@ export default function Navbar() {
                 >
                   Produkter
                 </NavLink>
+                  <NavLink
+                  to="/orders"
+                  className={({ isActive }) =>
+                    `block px-4 py-2 hover:bg-gray-100 ${
+                      isActive ? "font-medium text-gray-700" : ""
+                    }`
+                  }
+                  onClick={() => setOpenCatalog(false)}
+                >
+                  Ordrar
+                </NavLink>
                 {user?.roles.includes("Admin") && (
                   <>
                     <NavLink
