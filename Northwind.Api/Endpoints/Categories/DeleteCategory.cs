@@ -1,10 +1,13 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Northwind.Models;
+using Northwind.Auth;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Categories;
 
+[Authorize(Roles = Roles.Admin)]
 public class DeleteCategory : EndpointBaseAsync
     .WithRequest<int>
     .WithoutResult

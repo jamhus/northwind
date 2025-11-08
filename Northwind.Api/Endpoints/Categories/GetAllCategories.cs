@@ -1,7 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Northwind.Helpers;
-using Northwind.Models;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Categories;
 
@@ -13,6 +13,7 @@ public class GetAllCategories : EndpointBaseAsync
     public GetAllCategories(NorthwindContext db) => _db = db;
 
     [HttpGet("api/categories", Name = nameof(GetAllCategories))]
+
     public override async Task<ActionResult<List<CategoryDto>>> HandleAsync([FromQuery] ListRequest request, CancellationToken ct = default)
     {
         var categories = await _db.Categories

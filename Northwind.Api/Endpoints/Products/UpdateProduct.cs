@@ -1,10 +1,13 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Northwind.Auth;
 using Northwind.Helpers;
-using Northwind.Models;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Products;
+[Authorize(Roles = Roles.Admin)]
 
 public class UpdateProduct : EndpointBaseAsync
     .WithRequest<UpdateProductRequest>

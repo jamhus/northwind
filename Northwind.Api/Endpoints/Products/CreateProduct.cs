@@ -1,8 +1,12 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Northwind.Auth;
 using Northwind.Models;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Products;
+[Authorize(Roles = Roles.Admin)]
 
 public class CreateProduct : EndpointBaseAsync
     .WithRequest<CreateOrUpdateProductDto>

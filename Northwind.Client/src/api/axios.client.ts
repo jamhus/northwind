@@ -1,8 +1,17 @@
 import axios from "axios";
+import { authService } from "./auth.service";
 
 const axiosClient = axios.create({
-  baseURL: "/api", // proxas till .NET via vite.config.ts
+  baseURL: "/api",
   headers: { "Content-Type": "application/json" },
+});
+
+axiosClient.interceptors.request.use((config) => {
+  const token = authService.getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export type PagedResult<T> = {

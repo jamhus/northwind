@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
-namespace Northwind.Models;
+namespace Northwind.Models.Data;
 
-public partial class NorthwindContext : DbContext
+public partial class NorthwindContext : IdentityDbContext<ApplicationUser>
 {
     public NorthwindContext()
     {
@@ -39,6 +40,8 @@ public partial class NorthwindContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<OrderDetail>(entity =>
         {
             entity.HasKey(e => new { e.OrderId, e.ProductId });

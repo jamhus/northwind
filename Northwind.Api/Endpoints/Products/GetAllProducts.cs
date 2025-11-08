@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Helpers;
 using Northwind.Models;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Products
 {

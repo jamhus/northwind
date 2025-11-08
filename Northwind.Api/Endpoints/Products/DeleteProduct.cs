@@ -1,8 +1,11 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Northwind.Models;
+using Northwind.Auth;
+using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Products;
+[Authorize(Roles = Roles.Admin)]
 
 public class DeleteProduct : EndpointBaseAsync
     .WithRequest<int>
