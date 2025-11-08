@@ -41,9 +41,7 @@ export default function AppRoutes() {
             path="/orders"
             element={
               <RequireAuth>
-                <RequireRole roles={["Admin","Supplier","Manager"]}>
                   <OrdersPage />
-                </RequireRole>
               </RequireAuth>
             }
           />

@@ -30,6 +30,7 @@ public class GetAllOrders : EndpointBaseAsync
         var user = _contextAccessor.HttpContext?.User;
         var role = user?.FindFirstValue(ClaimTypes.Role) ?? "";
         var supplierIdClaim = user?.FindFirstValue("SupplierId");
+        var employeeIdClaim = user?.FindFirstValue("EmployeeId");
 
         var query = _db.Orders
             .Include(o => o.Customer)
@@ -41,6 +42,11 @@ public class GetAllOrders : EndpointBaseAsync
         if (role == "Supplier" && int.TryParse(supplierIdClaim, out var supplierId))
         {
             query = query.Where(o => o.OrderDetails.Any(od => od.Product!.SupplierId == supplierId));
+        }
+
+        if (role == "Employee" && int.TryParse(employeeIdClaim, out var employeeId))
+        {
+            query = query.Where(o => o.EmployeeId == employeeId);
         }
 
         var result = await query
