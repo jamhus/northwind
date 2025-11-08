@@ -58,6 +58,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

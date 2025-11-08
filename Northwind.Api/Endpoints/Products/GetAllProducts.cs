@@ -1,60 +1,78 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Helpers;
 using Northwind.Models;
 using Northwind.Models.Data;
+using System.Security.Claims;
 
-namespace Northwind.Endpoints.Products
+namespace Northwind.Endpoints.Products;
+
+[Authorize]
+public class GetAll : EndpointBaseAsync
+    .WithRequest<ListRequest>
+    .WithActionResult<PagedResult<ProductDto>>
 {
-    public class GetAllProducts : EndpointBaseAsync
-     .WithRequest<ListRequest>
-     .WithActionResult<PagedResult<Product>>
+    private readonly NorthwindContext _db;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GetAll(NorthwindContext db, IHttpContextAccessor httpContextAccessor)
     {
-        private readonly NorthwindContext _db;
-        public GetAllProducts(NorthwindContext db) => _db = db;
+        _db = db;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        [HttpGet("api/products", Name = nameof(GetAllProducts))]
-        [ProducesResponseType(typeof(PagedResult<ProductDto>), StatusCodes.Status200OK)]
+    [HttpGet("api/products")]
+    public override async Task<ActionResult<PagedResult<ProductDto>>> HandleAsync(
+        [FromQuery] ListRequest request,
+        CancellationToken ct = default)
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        var role = user?.FindFirstValue("Role") ?? "";
+        var supplierIdClaim = user?.FindFirstValue("SupplierId");
 
-        public override async Task<ActionResult<PagedResult<Product>>> HandleAsync(
-            [FromQuery] ListRequest request,
-            CancellationToken ct = default)
+        IQueryable<Product> query = _db.Products
+            .Include(p => p.Category)
+            .Include(p => p.Supplier)
+            .AsNoTracking();
+
+        if (role.Contains("Supplier") && int.TryParse(supplierIdClaim, out var supplierId))
         {
-            var result = await _db.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .OrderBy(p => p.ProductId)
-                .Select(p => new ProductDto
-                {
-                    Id = p.ProductId,
-                    ProductName = p.ProductName,
-                    UnitPrice = p.UnitPrice,
-                    UnitsInStock = p.UnitsInStock,
-                    CategoryName = p.Category.CategoryName,
-                    CategoryId = (int)p.CategoryId,
-                    SupplierName = p.Supplier.CompanyName,
-                    SupplierId = (int)p.SupplierId,
-                    QuantityPerUnit = p.QuantityPerUnit
-                })
-                .OrderByDescending(P => P.Id)
-                .ToPagedResultAsync(request.Page, request.PageSize, ct);
-
-            return Ok(result);
+            query = query.Where(p => p.SupplierId == supplierId);
         }
-    }
 
-    public class ProductDto
-    {
-        public int Id { get; set; }
-        public string ProductName { get; set; }
-        public decimal? UnitPrice { get; set; }
-        public short? UnitsInStock { get; set; }
-        public string CategoryName { get; set; }
-        public int CategoryId { get; set; }
-        public string SupplierName { get; set; }
-        public int SupplierId { get; set; }
-        public string? QuantityPerUnit { get; set; }
+        var result = await query
+            .OrderByDescending(p => p.ProductId)
+            .Select(p => new ProductDto
+            {
+                Id = p.ProductId,
+                ProductName = p.ProductName,
+                UnitPrice = p.UnitPrice,
+                UnitsInStock = p.UnitsInStock,
+                CategoryName = p.Category.CategoryName,
+                CompanyName = p.Supplier.CompanyName,
+                QuantityPerUnit = p.QuantityPerUnit,
+                SupplierId = p.Supplier.SupplierId,
+                CategoryId = p.Category.CategoryId
+            })
+            .ToPagedResultAsync(request.Page, request.PageSize, ct);
 
+        return Ok(result);
     }
+}
+
+
+public class ProductDto
+{
+    public int Id { get; set; }
+    public string ProductName { get; set; }
+    public decimal? UnitPrice { get; set; }
+    public short? UnitsInStock { get; set; }
+    public string CategoryName { get; set; }
+    public int CategoryId { get; set; }
+    public string CompanyName { get; set; }
+    public int SupplierId { get; set; }
+    public string? QuantityPerUnit { get; set; }
+
 }

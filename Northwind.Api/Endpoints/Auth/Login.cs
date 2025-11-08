@@ -41,7 +41,9 @@ public class Login : EndpointBaseAsync
         {
             new(JwtRegisteredClaimNames.Sub, user.Id),
             new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+            new(ClaimTypes.Role, string.Join(",", roles)),
             new("Role", string.Join(",", roles)),
+
         };
 
         if (user.SupplierId != null)

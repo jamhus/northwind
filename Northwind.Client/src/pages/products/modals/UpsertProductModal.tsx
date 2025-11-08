@@ -1,5 +1,6 @@
 import ModalWrapper from "./ModalWrapper";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../contexts/auth/useAuth";
 import type { Product } from "../../../api/product.service";
 import CategorySelect from "../../../components/common/CategorySelect";
 import SupplierSelect from "../../../components/common/SupplierSelect";
@@ -30,6 +31,7 @@ export default function UpsertProductModal({
   };
 
   const [form, setForm] = useState<Product>(empty);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (product && isOpen) setForm(product);
@@ -115,7 +117,7 @@ export default function UpsertProductModal({
             }
           />
         </label>
-
+        {user?.roles.includes("Admin") && (
          <label>
           <span className="text-sm text-gray-600">Leverantör</span>
           <SupplierSelect
@@ -130,6 +132,7 @@ export default function UpsertProductModal({
             }
           />
         </label>
+      )}
 
         <div className="flex justify-end gap-3 mt-4">
           <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded">

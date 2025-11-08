@@ -13,28 +13,44 @@ type DecodedToken = {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
- useEffect(() => {
-  const token = authService.getToken();
-  if (token) {
-    try {
-      const decoded = jwtDecode<DecodedToken>(token);
-      const roles = decoded.Role ? decoded.Role.split(",") : [];
-      setUser({
-        email: decoded.email,
-        roles,
-        supplierId: decoded.SupplierId ? parseInt(decoded.SupplierId) : undefined,
-        employeeId: decoded.EmployeeId ? parseInt(decoded.EmployeeId) : undefined,
-      });
-    } catch {
-      authService.logout();
+  useEffect(() => {
+    const token = authService.getToken();
+    if (token) {
+      try {
+        const decoded = jwtDecode<
+          DecodedToken & {
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string;
+          }
+        >(token);
+
+        const roles =
+          decoded.Role ??
+          decoded[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ] ??
+          "";
+        const roleList = roles.split(",");
+
+        setUser({
+          email: decoded.email,
+          roles: roleList,
+          supplierId: decoded.SupplierId
+            ? parseInt(decoded.SupplierId)
+            : undefined,
+          employeeId: decoded.EmployeeId
+            ? parseInt(decoded.EmployeeId)
+            : undefined,
+        });
+      } catch {
+        authService.logout();
+      }
     }
-  }
-  setLoading(false);
-}, []);
+    setLoading(false);
+  }, []);
 
-if (loading) return <div className="p-8 text-center">Laddar...</div>;
+  if (loading) return <div className="p-8 text-center">Laddar...</div>;
 
   async function login(email: string, password: string) {
     const res = await authService.login({ email, password });
@@ -53,7 +69,9 @@ if (loading) return <div className="p-8 text-center">Laddar...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

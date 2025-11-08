@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import Table from "../../components/common/Table";
 import { categoryIcons } from "../../assets/icons";
 import Loader from "../../components/common/Loader";
+import { notify } from "../../components/common/Notify";
 import Pagination from "../../components/common/Pagination";
 import UpsertProductModal from "./modals/UpsertProductModal";
 import DeleteProductModal from "./modals/DeleteProductModal";
 import { productService, type Product } from "../../api/product.service";
-import { notify } from "../../components/common/Notify";
 
 export default function ProductsPage() {
   const pageSize = 10;

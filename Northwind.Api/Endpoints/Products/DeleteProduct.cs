@@ -1,25 +1,41 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Northwind.Auth;
+using Microsoft.EntityFrameworkCore;
 using Northwind.Models.Data;
+using System.Security.Claims;
 
 namespace Northwind.Endpoints.Products;
-[Authorize(Roles = Roles.Admin)]
 
+[Authorize(Roles = "Admin,Supplier")]
 public class DeleteProduct : EndpointBaseAsync
     .WithRequest<int>
     .WithActionResult
 {
     private readonly NorthwindContext _db;
-    public DeleteProduct(NorthwindContext db) => _db = db;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    [HttpDelete("api/products/{id}", Name = nameof(DeleteProduct))]
+    public DeleteProduct(NorthwindContext db, IHttpContextAccessor contextAccessor)
+    {
+        _db = db;
+        _contextAccessor = contextAccessor;
+    }
+
+    [HttpDelete("api/products/{id}")]
     public override async Task<ActionResult> HandleAsync(int id, CancellationToken ct = default)
     {
-        var product = await _db.Products.FindAsync(new object[] { id }, ct);
-        if (product is null)
-            return NotFound();
+        var user = _contextAccessor.HttpContext?.User;
+        var role = user?.FindFirstValue(ClaimTypes.Role) ?? "";
+        var supplierIdClaim = user?.FindFirstValue("SupplierId");
+
+        var product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == id, ct);
+        if (product is null) return NotFound();
+
+        if (role.Contains("Supplier") && supplierIdClaim != null)
+        {
+            if (product.SupplierId.ToString() != supplierIdClaim)
+                return Forbid();
+        }
 
         _db.Products.Remove(product);
         await _db.SaveChangesAsync(ct);
