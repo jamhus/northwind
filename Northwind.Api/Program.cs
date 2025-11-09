@@ -56,6 +56,23 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Managers", p => p.RequireRole(Roles.Manager, Roles.Admin));
 });
 
+// Engine & helpers
+builder.Services.AddScoped<Northwind.Dashboard.Engine.ConditionEvaluator>();
+builder.Services.AddScoped<Northwind.Dashboard.Engine.DynamicDataService>();
+builder.Services.AddScoped<Northwind.Dashboard.Engine.ParameterEvaluator>();
+builder.Services.AddScoped<Northwind.Dashboard.Engine.ReportPageExecutor>();
+builder.Services.AddScoped<Northwind.Dashboard.Engine.DashboardRuntimeService>();
+
+// Handlers
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalSalesHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalOrdersHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalCustomersHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.SalesByMonthHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TopProductsHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.SalesPerRegionHandler>();
+builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TopEmployeesHandler>();
+
+
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddHttpContextAccessor();

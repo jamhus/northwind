@@ -37,6 +37,8 @@ public partial class NorthwindContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<Territory> Territories { get; set; }
+    public DbSet<DashboardConfig> DashboardConfigs { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
