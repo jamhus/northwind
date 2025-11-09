@@ -1,69 +1,97 @@
-import HomePage from "../pages/HomePage";
-import LoginPage from "../pages/auth/LoginPage";
-import AddUserPage from "../pages/admin/AddUserPage";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./../contexts/auth/useAuth";
+import ProductsPage from "./../pages/products/ProductsPage";
+import CategoriesPage from "./../pages/categories/CategoriesPage";
+import SuppliersPage from "./../pages/suppliers/SuppliersPage";
+import OrdersDashboardPage from "./../pages/dashboard/OrdersDashboardPage";
+import EmployeeDashboardPage from "./../pages/dashboard/EmployeeDashboardPage";
+import LoginPage from "./../pages/auth/LoginPage";
+import AddUserPage from "./../pages/admin/AddUserPage";
+import ProtectedRoute from "../components/auth/ProtectedRoutes";
 import AppLayout from "../components/layout/AppLayout";
-import ProductsPage from "../pages/products/ProductsPage";
-import { RequireAuth } from "../components/auth/RequireAuth";
-import SuppliersPage from "../pages/suppliers/SuppliersPage";
-import { RequireRole } from "../components/auth/RequireRole";
-import CategoriesPage from "../pages/categories/CategoriesPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import OrdersPage from "../pages/orders/OrdersPage";
 
 export default function AppRoutes() {
+  const { user, isAuthenticated } = useAuth();
+
+  // Standard dashboard
+  const dashboard = user?.roles.includes("Employee") ? (
+    <EmployeeDashboardPage />
+  ) : (
+    <OrdersDashboardPage />
+  );
+
   return (
-    <BrowserRouter>
-      <AppLayout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/suppliers"
-            element={
-              <RequireAuth>
-                <RequireRole roles={["Admin"]}>
-                  <SuppliersPage />
-                </RequireRole>
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/products"
-            element={
-              <RequireAuth>
-                <RequireRole roles={["Admin","Supplier","Manager"]}>
-                  <ProductsPage />
-                </RequireRole>
-              </RequireAuth>
-            }
-          />
-           <Route
-            path="/orders"
-            element={
-              <RequireAuth>
-                  <OrdersPage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/admin/add-user"
-            element={
-              <RequireAuth>
-                <RequireRole roles={["Admin"]}>
-                  <AddUserPage />
-                </RequireRole>
-              </RequireAuth>
-            }
-          />
-          <Route path="/categories" element={
-              <RequireAuth>
-                <RequireRole roles={["Admin"]}>
-                  <CategoriesPage />
-                </RequireRole>
-              </RequireAuth>
-            } />
-        </Routes>
-      </AppLayout>
-    </BrowserRouter>
+    <AppLayout>
+      <Routes>
+        {/* Login */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Dashboard - kräver inloggning */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute roles={["Admin", "Employee", "Supplier"]}>
+              {dashboard}
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin routes */}
+        <Route
+          path="/admin/add-user"
+          element={
+            <ProtectedRoute roles={["Admin"]}>
+              <AddUserPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Products/Categories/Suppliers */}
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute roles={["Admin", "Supplier"]}>
+              <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute roles={["Admin"]}>
+              <CategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/suppliers"
+          element={
+            <ProtectedRoute roles={["Admin", "Supplier"]}>
+              <SuppliersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute roles={["Admin", "Employee", "Supplier"]}>
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Fallback */}
+        <Route
+          path="*"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    </AppLayout>
   );
 }
