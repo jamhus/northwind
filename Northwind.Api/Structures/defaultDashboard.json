@@ -1,0 +1,183 @@
+{
+  "version": 3,
+  "companyId": 1,
+  "type": "Dashboard",
+  "parameters": [
+    {
+      "key": "isAdmin",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.getIsAdmin()",
+      "description": "Currently logged in user is admin",
+      "expiration": "1.00:00:00"
+    },
+    {
+      "key": "userRoles",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.getCurrentRoles()",
+      "description": "Currently logged in user roles",
+      "expiration": "1.00:00:00"
+    },
+    {
+      "key": "totalSales",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.TotalSales()",
+      "description": "Total sales amount for visible orders"
+    },
+    {
+      "key": "totalOrders",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.TotalOrders()"
+    },
+    {
+      "key": "totalCustomers",
+      "initialization": "Handler",
+      "entityType": "Customer",
+      "expression": "Handler.TotalCustomers()"
+    },
+    {
+      "key": "salesPerMonth",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.SalesPerMonth()"
+    },
+    {
+      "key": "topProducts",
+      "initialization": "Handler",
+      "entityType": "Product",
+      "expression": "Handler.TopProducts(5)"
+    },
+    {
+      "key": "salesPerRegion",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.SalesPerRegion()"
+    },
+    {
+      "key": "topEmployees",
+      "initialization": "Handler",
+      "entityType": "Employee",
+      "expression": "Handler.TopEmployees(6)"
+    }
+  ],
+  "reportPages": [
+    {
+      "key": "mainDashboard",
+      "name": [
+        { "language": "sv", "text": "Orderöversikt" },
+        { "language": "en", "text": "Order Overview" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          {
+            "columns": [
+              { "itemRef": "totalSalesCard" },
+              { "itemRef": "totalOrdersCard" },
+              { "itemRef": "totalCustomersCard" }
+            ]
+          },
+          {
+            "columns": [{ "itemRef": "salesPerMonthChart" }]
+          },
+          {
+            "columns": [{ "itemRef": "topProductsChart" }]
+          },
+          {
+            "columns": [{ "itemRef": "salesPerRegionChart" }]
+          },
+          {
+            "columns": [{ "itemRef": "topEmployeesChart" }]
+          }
+        ]
+      },
+      "reportPageItems": [
+        {
+          "key": "totalSalesCard",
+          "reportPageItemType": "TotalSales",
+          "settings": {
+            "parameterKey": "totalSales",
+            "title": "Total försäljning",
+            "prefix": "",
+            "suffix": " kr",
+            "decimalPlaces": 2,
+            "icon": "DollarSign"
+          }
+        },
+        {
+          "key": "totalOrdersCard",
+          "reportPageItemType": "TotalOrders",
+          "settings": {
+            "parameterKey": "totalOrders",
+            "title": "Antal ordrar",
+            "icon": "Package"
+          }
+        },
+        {
+          "key": "totalCustomersCard",
+          "reportPageItemType": "TotalCustomers",
+          "settings": {
+            "parameterKey": "totalCustomers",
+            "title": "Kunder",
+            "icon": "Users"
+          }
+        },
+        {
+          "key": "salesPerMonthChart",
+          "reportPageItemType": "SalesByMonth",
+          "settings": {
+            "parameterKey": "salesPerMonth",
+            "title": "Försäljning per månad",
+            "chartType": "line",
+            "color": "blue"
+          }
+        },
+        {
+          "key": "topProductsChart",
+          "reportPageItemType": "TopProducts",
+          "settings": {
+            "parameterKey": "topProducts",
+            "title": "Topp 5 produkter",
+            "chartType": "bar",
+            "color": "green"
+          }
+        },
+        {
+          "key": "salesPerRegionChart",
+          "reportPageItemType": "SalesPerRegion",
+          "settings": {
+            "parameterKey": "salesPerRegion",
+            "title": "Försäljning per region",
+            "chartType": "pie"
+          },
+          "condition": {
+            "logic": "And",
+            "conditions": [
+              {
+                "operator": "Eq",
+                "leftSource": "Parameter",
+                "leftField": "isAdmin",
+                "rightSource": "Const",
+                "rightValue": "1"
+              }
+            ]
+          }
+        },
+        {
+          "key": "topEmployeesChart",
+          "reportPageItemType": "TopEmployees",
+          "settings": {
+            "parameterKey": "topEmployees",
+            "title": "Prestation per anställd",
+            "chartType": "bar",
+            "color": "orange"
+          }
+        }
+      ]
+    }
+  ]
+}

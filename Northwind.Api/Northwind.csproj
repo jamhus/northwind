@@ -24,7 +24,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
-  <ItemGroup>
+<!--  Kopiera default-dashboard från Client till Api vid build -->
+<Target Name="CopyDashboardJson" AfterTargets="Build">
+	<Copy SourceFiles="..\Northwind.Client\src\structures\defaultDashboard.json" DestinationFolder="Structures\" SkipUnchangedFiles="true" />
+</Target>
+
+
+	<ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
 

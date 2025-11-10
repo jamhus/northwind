@@ -1,6 +1,7 @@
-﻿using System.Text.Json;
+﻿using Northwind.Dashboard.Models;
 using System.Security.Claims;
-using Northwind.Dashboard.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Northwind.Dashboard.Engine;
 
@@ -19,7 +20,13 @@ public class DashboardRuntimeService
 
     public async Task<RenderedDashboardResult> RenderAsync(string configJson, ClaimsPrincipal user, CancellationToken ct = default)
     {
-        var def = JsonSerializer.Deserialize<DashboardDefinition>(configJson)
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        options.Converters.Add(new JsonStringEnumConverter());
+
+        var def = JsonSerializer.Deserialize<DashboardDefinition>(configJson, options)
                   ?? throw new InvalidOperationException("Invalid dashboard JSON");
 
         var store = await _parameters.InitializeAsync(def.Parameters, ct);

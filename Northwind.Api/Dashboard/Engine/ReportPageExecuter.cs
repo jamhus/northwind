@@ -26,7 +26,9 @@ public class ReportPageExecutor
             var rp = new RenderedPage
             {
                 Key = page.Key,
-                Title = page.Name.FirstOrDefault()?.Text ?? page.Key
+                Title = page.Name.FirstOrDefault()?.Text ?? page.Key,
+                Name = page.Name,
+                Layout = page.Layout,
             };
 
             // layouten pekar på items via itemRef
@@ -47,7 +49,7 @@ public class ReportPageExecutor
                     if (handler is null) continue;
 
                     var data = await handler.ExecuteItemAsync(item.Settings ?? new(), store, ct);
-                    rp.Items.Add(new RenderedItem
+                    rp.ReportPageItems.Add(new RenderedItem
                     {
                         Key = item.Key,
                         Type = item.ReportPageItemType,

@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Card, CardContent } from "../../../components/ui/Card";
 
 type Props = {
   settings: { title: string; color?: string };
@@ -15,19 +16,19 @@ type Props = {
 
 export default function TopProductsChart({ settings, data = [] }: Props) {
   return (
-    <div className="border rounded-lg p-4 bg-white shadow-sm">
-      <div className="text-sm font-medium text-gray-700 mb-2">
-        {settings.title}
-      </div>
-      <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="total" fill={settings.color || "#10b981"} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <Card>
+      <CardContent className="p-6">
+        <h2 className="text-lg font-semibold mb-4">{settings.title}</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="totalSales" fill="#10b981" />
+          </BarChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
   );
 }

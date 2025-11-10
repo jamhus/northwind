@@ -24,7 +24,7 @@ export interface ReportPageItem {
   key: string;
   enabled: boolean;
   order: number;
-  reportPageItemType: string;
+  type: string;
   condition?: Condition;
   settings?: Record<string, any>;
   data?: any; // fylld av backend (handlers)
@@ -73,7 +73,7 @@ export interface DashboardDefinition {
   companyId: number;
   type: "Dashboard" | string;
   parameters: ParameterDefinition[];
-  reportPages: ReportPage[];
+  pages: ReportPage[];
 }
 
 export const dashboardService = {

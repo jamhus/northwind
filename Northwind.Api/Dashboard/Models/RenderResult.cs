@@ -9,8 +9,11 @@ public class RenderedPage
 {
     public string Key { get; set; } = "";
     public string Title { get; set; } = "";
-    public List<RenderedItem> Items { get; set; } = [];
+    public List<LocalizedName> Name { get; set; }
+    public List<RenderedItem> ReportPageItems { get; set; } = [];
+    public Layout? Layout { get; set; }
 }
+
 
 public class RenderedItem
 {

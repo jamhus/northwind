@@ -7,10 +7,10 @@ type Props = {
 
 export default function ItemRenderer({ itemRef, items }: Props) {
   const item = items.find((x) => x.key === itemRef);
-  if (!item || !item.enabled) return null;
+  if (!item) return null;
+  const Comp = componentRegistry[item.type];
 
-  const Comp = componentRegistry[item.reportPageItemType];
-  if (!Comp) return <div>❌ {item.reportPageItemType} saknas</div>;
-
+  if (!Comp) return <div>❌ {item.type} saknas</div>;
+  
   return <Comp settings={item.settings} data={item.data} />;
 }

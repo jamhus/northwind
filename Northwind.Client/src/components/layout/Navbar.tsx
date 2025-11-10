@@ -106,6 +106,13 @@ export default function Navbar() {
           </div>
 
           {user?.roles.includes("Admin") && (
+            <>
+            <NavLink
+              to="/dashboardV2"
+              className="flex items-center gap-1 hover:text-gray-300"
+            >
+              <LogIn size={16} /> Dashboard V2
+            </NavLink>
             <div className="relative" ref={adminRef}>
               <button
                 onClick={() => setOpenAdmin(!openAdmin)}
@@ -129,7 +136,7 @@ export default function Navbar() {
                     Lägg till användare
                   </NavLink>
                   <NavLink
-                    to="/admin/reports"
+                    to="/admin/dashboard-config"
                     className={({ isActive }) =>
                       `block px-4 py-2 hover:bg-gray-100 ${
                         isActive ? "font-medium text-gray-700" : ""
@@ -137,11 +144,12 @@ export default function Navbar() {
                     }
                     onClick={() => setOpenAdmin(false)}
                   >
-                    Rapporter (kommande)
+                    Dashboard-konfiguration
                   </NavLink>
                 </div>
               )}
             </div>
+            </>
           )}
 
           {!isAuthenticated ? (

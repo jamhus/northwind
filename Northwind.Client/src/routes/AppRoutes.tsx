@@ -10,6 +10,8 @@ import AddUserPage from "./../pages/admin/AddUserPage";
 import ProtectedRoute from "../components/auth/ProtectedRoutes";
 import AppLayout from "../components/layout/AppLayout";
 import OrdersPage from "../pages/orders/OrdersPage";
+import DashboardConfigPage from "../pages/admin/DashboardConfigPage";
+import DashboardPage from "../pages/dashboard/DashboardPage";
 
 export default function AppRoutes() {
   const { user, isAuthenticated } = useAuth();
@@ -36,6 +38,14 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/dashboardV2"
+          element={
+            <ProtectedRoute roles={["Admin"]}>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin routes */}
         <Route
@@ -43,6 +53,14 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute roles={["Admin"]}>
               <AddUserPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard-config"
+          element={
+            <ProtectedRoute roles={["Admin"]}>
+              <DashboardConfigPage />
             </ProtectedRoute>
           }
         />

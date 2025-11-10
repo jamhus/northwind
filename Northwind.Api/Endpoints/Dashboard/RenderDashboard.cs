@@ -8,9 +8,8 @@ using Northwind.Models;
 using Northwind.Models.Data;
 using System.Security.Claims;
 
-namespace Northwind.Dashboard.Endpoints;
+namespace Northwind.Endpoints.Dashboard;
 
-[Authorize]
 public class RenderDashboard : EndpointBaseAsync
     .WithoutRequest
     .WithActionResult<RenderedDashboardResult>
@@ -38,9 +37,6 @@ public class RenderDashboard : EndpointBaseAsync
 
         if (string.Equals(role, "Supplier", StringComparison.OrdinalIgnoreCase) && supplierId != null)
             query = query.Where(c => c.SupplierId == int.Parse(supplierId));
-
-        else if (string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase))
-            query = query.Where(c => c.Key == "admin-dashboard");
 
         else
             query = query.Where(c => c.Key == "default");

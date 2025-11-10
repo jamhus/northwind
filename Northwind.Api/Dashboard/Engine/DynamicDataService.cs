@@ -14,6 +14,25 @@ public class DynamicDataService
         var role = _http.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
         return string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase);
     }
+    public IEnumerable<string> GetCurrentRoles()
+    {
+        var user = _http.HttpContext?.User;
+        if (user == null || !user.Identity?.IsAuthenticated == true)
+            return Enumerable.Empty<string>();
+
+        // Hämtar alla roller från claims
+        var roles = user.Claims
+            .Where(c => c.Type == ClaimTypes.Role || c.Type.EndsWith("/role"))
+            .Select(c => c.Value)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        // Om ingen roll hittas, anta "Guest"
+        if (!roles.Any())
+            roles.Add("Guest");
+
+        return roles;
+    }
 
     public string? GetClaim(string type) => _http.HttpContext?.User.FindFirstValue(type);
 }
