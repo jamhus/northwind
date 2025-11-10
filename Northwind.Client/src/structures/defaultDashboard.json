@@ -54,7 +54,7 @@
       "key": "salesPerRegion",
       "initialization": "Handler",
       "entityType": "Order",
-      "expression": "Handler.SalesPerRegion()"
+      "expression": "Handler.SalesPerRegion(5)"
     },
     {
       "key": "topEmployees",
@@ -128,7 +128,7 @@
         },
         {
           "key": "salesPerMonthChart",
-          "reportPageItemType": "SalesByMonth",
+          "reportPageItemType": "SalesPerMonth",
           "settings": {
             "parameterKey": "salesPerMonth",
             "title": "Försäljning per månad",
@@ -151,6 +151,7 @@
           "reportPageItemType": "SalesPerRegion",
           "settings": {
             "parameterKey": "salesPerRegion",
+            "suffix": " kr",
             "title": "Försäljning per region",
             "chartType": "pie"
           },
@@ -162,7 +163,7 @@
                 "leftSource": "Parameter",
                 "leftField": "isAdmin",
                 "rightSource": "Const",
-                "rightValue": "1"
+                "rightValue": "true"
               }
             ]
           }

@@ -12,6 +12,8 @@ public class SalesPerRegionHandler : BaseHandler
 
     public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
     {
+        var top = GetTopArg(settings, 6);
+
         var data = await Db.Orders
             .Where(o => o.ShipCountry != null)
             .Select(o => new
@@ -20,10 +22,11 @@ public class SalesPerRegionHandler : BaseHandler
                 Total = o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
             })
             .AsNoTracking()
+            .Take(top)
             .ToListAsync(ct);
 
         var result = data.GroupBy(x => x.Region)
-                         .Select(g => new { region = g.Key, totalSales = g.Sum(x => x.Total) })
+                         .Select(g => new { region = g.Key, totalSales = Math.Round(g.Sum(x => x.Total),1) })
                          .OrderByDescending(x => x.totalSales)
                          .ToList();
 

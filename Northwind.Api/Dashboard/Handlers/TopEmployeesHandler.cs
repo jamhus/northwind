@@ -20,8 +20,8 @@ public class TopEmployeesHandler : BaseHandler
             .Select(g => new
             {
                 employeeName = g.Key,
-                totalSales = g.SelectMany(o => o.OrderDetails)
-                              .Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
+                totalSales = Math.Round(g.SelectMany(o => o.OrderDetails)
+                              .Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount)),1)
             })
             .OrderByDescending(x => x.totalSales)
             .Take(top)

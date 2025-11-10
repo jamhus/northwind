@@ -13,7 +13,7 @@ export const componentRegistry: Record<string, any> = {
   TotalOrders: TotalOrdersCard,
   TopProducts: TopProductsChart,
   TopEmployees: TopEmployeesChart,
-  SalesByMonth: SalesByMonthChart,
+  SalesPerMonth: SalesByMonthChart,
   TotalCustomers: TotalCustomersCard,
   SalesPerRegion: SalesPerRegionChart,
 };

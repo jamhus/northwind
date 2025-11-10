@@ -19,7 +19,7 @@ public class TopProductsHandler : BaseHandler
             .Select(g => new
             {
                 name = g.Key!,
-                totalSales = g.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount))
+                totalSales = Math.Round(g.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount)),1)
             })
             .OrderByDescending(x => x.totalSales)
             .Take(top)

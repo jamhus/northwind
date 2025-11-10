@@ -18,7 +18,7 @@ public class SalesByMonthHandler : BaseHandler
             .Select(o => new
             {
                 Month = $"{o.OrderDate!.Value:yyyy-MM}",
-                Total = o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
+                Total = Math.Round(o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount)),1)
             })
             .AsNoTracking()
             .ToListAsync(ct);

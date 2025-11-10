@@ -27,7 +27,7 @@ export default function SalesByMonthChart({ settings, data = [] }: Props) {
               <Tooltip />
               <Line
                 type="monotone"
-                dataKey="total"
+                dataKey="totalSales"
                 stroke="#2563eb"
                 strokeWidth={2}
               />

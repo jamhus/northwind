@@ -3,8 +3,6 @@ import { useAuth } from "./../contexts/auth/useAuth";
 import ProductsPage from "./../pages/products/ProductsPage";
 import CategoriesPage from "./../pages/categories/CategoriesPage";
 import SuppliersPage from "./../pages/suppliers/SuppliersPage";
-import OrdersDashboardPage from "./../pages/dashboard/OrdersDashboardPage";
-import EmployeeDashboardPage from "./../pages/dashboard/EmployeeDashboardPage";
 import LoginPage from "./../pages/auth/LoginPage";
 import AddUserPage from "./../pages/admin/AddUserPage";
 import ProtectedRoute from "../components/auth/ProtectedRoutes";
@@ -14,14 +12,8 @@ import DashboardConfigPage from "../pages/admin/DashboardConfigPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 
 export default function AppRoutes() {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  // Standard dashboard
-  const dashboard = user?.roles.includes("Employee") ? (
-    <EmployeeDashboardPage />
-  ) : (
-    <OrdersDashboardPage />
-  );
 
   return (
     <AppLayout>
@@ -34,14 +26,6 @@ export default function AppRoutes() {
           path="/"
           element={
             <ProtectedRoute roles={["Admin", "Employee", "Supplier"]}>
-              {dashboard}
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboardV2"
-          element={
-            <ProtectedRoute roles={["Admin"]}>
               <DashboardPage />
             </ProtectedRoute>
           }

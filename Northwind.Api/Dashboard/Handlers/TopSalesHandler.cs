@@ -13,6 +13,6 @@ public class TotalSalesHandler : BaseHandler
     public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
     {
         var total = await Db.OrderDetails.SumAsync(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount), ct);
-        return new { totalSales = total };
+        return new { totalSales = Math.Round(total,1) };
     }
 }
