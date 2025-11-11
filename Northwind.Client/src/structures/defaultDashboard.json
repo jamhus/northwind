@@ -211,25 +211,6 @@
             "parameterKey": "salesPerRegion",
             "title": "Försäljning per region",
             "chartType": "pie"
-          },
-          "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
           }
         },
         {
@@ -250,25 +231,6 @@
             "title": "Toppkunder",
             "chartType": "bar",
             "color": "teal"
-          },
-          "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
           }
         },
         {
@@ -312,18 +274,11 @@
             "logic": "Or",
             "conditions": [
               {
-                "operator": "Contains",
+                "operator": "Nin",
                 "leftSource": "Parameter",
                 "leftField": "userRoles",
                 "rightSource": "Const",
-                "rightValue": "Employee"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
+                "rightValue": "Admin"
               }
             ]
           }

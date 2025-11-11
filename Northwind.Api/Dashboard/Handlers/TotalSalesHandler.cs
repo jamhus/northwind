@@ -5,16 +5,15 @@ using System.Security.Claims;
 
 namespace Northwind.Dashboard.Handlers;
 
-public class SalesPerRegionHandler : BaseHandler
+public class TotalSalesHandler : BaseHandler
 {
     private readonly IHttpContextAccessor _http;
-
-    public SalesPerRegionHandler(NorthwindContext db, IHttpContextAccessor http) : base(db)
+    public TotalSalesHandler(NorthwindContext db, IHttpContextAccessor http) : base(db)
     {
         _http = http;
     }
 
-    public override string Type => "SalesPerRegion";
+    public override string Type => "TotalSales";
 
     public override async Task<object?> ExecuteItemAsync(
         Dictionary<string, object> settings,
@@ -29,35 +28,20 @@ public class SalesPerRegionHandler : BaseHandler
         var query = Db.OrderDetails
             .Include(d => d.Order)
             .Include(d => d.Product)
-            .Where(d => d.Order!.ShipCountry != null)
             .AsQueryable();
 
-        // 🔹 Supplier – visa endast deras produkter
         if (role == "Supplier" && int.TryParse(supplierId, out var sid))
         {
             query = query.Where(d => d.Product.SupplierId == sid);
         }
-        // 🔹 Employee – visa endast regioner för hans orders
         else if (role == "Employee" && int.TryParse(employeeId, out var eid))
         {
             query = query.Where(d => d.Order.EmployeeId == eid);
         }
 
-        var grouped = await query
-            .GroupBy(d => d.Order!.ShipCountry!)
-            .Select(g => new
-            {
-                Region = g.Key,
-                TotalSales = g.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
-            })
-            .OrderByDescending(x => x.TotalSales)
-            .AsNoTracking()
-            .ToListAsync(ct);
+        var totalSales = await query
+            .SumAsync(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount), ct);
 
-        return grouped.Select(x => new
-        {
-            region = x.Region,
-            totalSales = Math.Round(x.TotalSales, 1)
-        }).ToList();
+        return Math.Round(totalSales, 1);
     }
 }

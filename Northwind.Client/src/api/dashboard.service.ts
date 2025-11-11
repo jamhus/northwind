@@ -33,7 +33,7 @@ export interface PageItem {
 export interface Condition {
   logic: "And" | "Or";
   conditions: {
-    operator: "Eq" | "Neq" | "Gt" | "Lt" | "Gte" | "Lte" | "Contains" | "NotContains" | "In";
+    operator: "Eq" | "Neq" | "Gt" | "Lt" | "Gte" | "Lte" | "Contains" | "NotContains" | "In" | "Nin";
     leftSource: "Parameter" | "Const" | "Claim";
     leftField?: string;
     rightSource: "Parameter" | "Const" | "Claim";

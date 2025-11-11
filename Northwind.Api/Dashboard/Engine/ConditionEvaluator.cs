@@ -92,6 +92,8 @@ public class ConditionEvaluator
 
             case "In":
                 return IsInList(sl, sr);
+            case "Nin":
+                return !IsInList(sl, sr);
 
             default:
                 return true;

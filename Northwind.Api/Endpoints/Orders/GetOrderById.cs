@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Models.Data;
@@ -7,43 +6,68 @@ using System.Security.Claims;
 
 namespace Northwind.Endpoints.Orders;
 
-[Authorize]
 public class GetOrderById : EndpointBaseAsync
     .WithRequest<int>
-    .WithActionResult<OrderDetailsDto>
+    .WithActionResult<object>
 {
     private readonly NorthwindContext _db;
-    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IHttpContextAccessor _http;
 
-    public GetOrderById(NorthwindContext db, IHttpContextAccessor contextAccessor)
+    public GetOrderById(NorthwindContext db, IHttpContextAccessor http)
     {
         _db = db;
-        _contextAccessor = contextAccessor;
+        _http = http;
     }
 
-    [HttpGet("api/orders/{id}")]
-    public override async Task<ActionResult<OrderDetailsDto>> HandleAsync(int id, CancellationToken ct = default)
+    [HttpGet("api/orders/{id:int}")]
+    public override async Task<ActionResult<object>> HandleAsync(int id, CancellationToken ct = default)
     {
-        var user = _contextAccessor.HttpContext?.User;
-        var role = user?.FindFirstValue(ClaimTypes.Role);
-        var supplierIdClaim = user?.FindFirstValue("SupplierId");
+        var user = _http.HttpContext!.User;
+        var roles = user.Claims
+          .Where(c => c.Type == ClaimTypes.Role || c.Type.EndsWith("/role"))
+          .Select(c => c.Value)
+          .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var employeeIdClaim = user.FindFirstValue("EmployeeId");
+        var supplierIdClaim = user.FindFirstValue("SupplierId");
+        int? supplierId = int.TryParse(supplierIdClaim, out var sId) ? sId : null;
+        int? employeeId = int.TryParse(employeeIdClaim, out var eId) ? eId : null;
 
-        var order = await _db.Orders
+        var query = _db.Orders
             .Include(o => o.Customer)
             .Include(o => o.Employee)
             .Include(o => o.OrderDetails)
-                .ThenInclude(d => d.Product)
-                    .ThenInclude(p => p.Supplier)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.OrderId == id, ct);
+            .ThenInclude(od => od.Product)
+            .ThenInclude(p => p.Supplier)
+            .AsQueryable();
 
-        if (order is null) return NotFound();
 
-        if (role == "Supplier" && int.TryParse(supplierIdClaim, out var supplierId))
+        // 🔹 Employee: endast sina ordrar
+        if (roles.Contains("Employee") && employeeId.HasValue)
         {
-            if (!order.OrderDetails.Any(d => d.Product!.SupplierId == supplierId))
-                return Forbid();
+            query = query.Where(o => o.EmployeeId == employeeId.Value);
         }
+
+        // 🔹 Supplier: endast ordrar som innehåller hans produkter
+        else if (roles.Contains("Supplier") && supplierId.HasValue)
+        {
+            query = query.Where(o => o.OrderDetails.Any(d => d.Product.SupplierId == supplierId.Value));
+        }
+
+        var order = await query.FirstOrDefaultAsync(o => o.OrderId == id, ct);
+
+        if (order == null) return NotFound();
+
+        if (roles.Contains("Supplier") && supplierId.HasValue)
+        {
+            if (!order.OrderDetails.Any(d => d.Product.SupplierId == supplierId.Value))
+                return Forbid();
+
+            order.OrderDetails = order.OrderDetails
+                .Where(d => d.Product.SupplierId == supplierId.Value)
+                .ToList();
+        }
+
+        if (order == null) return NotFound();
 
         var dto = new OrderDetailsDto
         {
@@ -62,9 +86,11 @@ public class GetOrderById : EndpointBaseAsync
             }).ToList()
         };
 
+
         return Ok(dto);
     }
 }
+
 
 public class OrderDetailsDto
 {

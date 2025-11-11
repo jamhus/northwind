@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Dashboard.Engine;
@@ -16,13 +15,19 @@ public class RenderDashboard : EndpointBaseAsync
 {
     private readonly DashboardRuntimeService _runtime;
     private readonly IHttpContextAccessor _http;
-    private readonly NorthwindContext _db; // om du hämtar config från DB
+    private readonly NorthwindContext _db;
+    private readonly IWebHostEnvironment _env;
 
-    public RenderDashboard(DashboardRuntimeService runtime, IHttpContextAccessor http, NorthwindContext db)
+    public RenderDashboard(
+        DashboardRuntimeService runtime,
+        IHttpContextAccessor http,
+        NorthwindContext db,
+        IWebHostEnvironment env)
     {
         _runtime = runtime;
         _http = http;
         _db = db;
+        _env = env;
     }
 
     [HttpGet("api/dashboard/render")]
@@ -32,22 +37,45 @@ public class RenderDashboard : EndpointBaseAsync
         var role = user.FindFirstValue(ClaimTypes.Role);
         var supplierId = user.FindFirstValue("SupplierId");
 
-        // välj config dynamiskt beroende på användare
-        IQueryable<DashboardConfig> query = _db.DashboardConfigs;
+        IQueryable<DashboardConfig> query = _db.DashboardConfigs.AsNoTracking();
 
+        // 🔹 1. Välj config beroende på roll/supplier
         if (string.Equals(role, "Supplier", StringComparison.OrdinalIgnoreCase) && supplierId != null)
-            query = query.Where(c => c.SupplierId == int.Parse(supplierId));
-
+        {
+            query = query.Where(c => c.CompanyId == int.Parse(supplierId));
+        }
         else
+        {
             query = query.Where(c => c.Key == "default");
+        }
 
-        var cfg = await query.OrderByDescending(c => c.UpdatedAt ?? c.CreatedAt)
-                             .Select(c => c.ConfigJson)
-                             .FirstOrDefaultAsync(ct);
+        var cfg = await query
+            .OrderByDescending(c => c.UpdatedAt ?? c.CreatedAt)
+            .Select(c => c.ConfigJson)
+            .FirstOrDefaultAsync(ct);
 
+        // 🔹 2. Om inget hittas, försök ladda defaultDashboard.json
         if (cfg is null)
-            return NotFound("Ingen dashboardkonfiguration hittades.");
+        {
+            var path = Path.Combine(_env.ContentRootPath, "Structures", "defaultDashboard.json");
+            if (System.IO.File.Exists(path))
+            {
+                cfg = await System.IO.File.ReadAllTextAsync(path, ct);
 
+                _db.DashboardConfigs.Add(new DashboardConfig
+                {
+                    Key = "default",
+                    CompanyId = supplierId != null ? int.Parse(supplierId) : null,
+                    ConfigJson = cfg,
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await _db.SaveChangesAsync(ct);
+            }
+
+        }
+
+        // 🔹 3. Rendera dashboard med vald konfiguration
         var result = await _runtime.RenderAsync(cfg, user, ct);
         return Ok(result);
     }

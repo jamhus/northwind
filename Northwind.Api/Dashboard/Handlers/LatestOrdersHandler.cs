@@ -30,6 +30,12 @@ public class LatestOrdersHandler : BaseHandler
             .Select(c => c.Value)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+        var supplierIdClaim = user.FindFirstValue("SupplierId");
+        var employeeIdClaim = user.FindFirstValue("EmployeeId");
+
+        int? supplierId = int.TryParse(supplierIdClaim, out var sId) ? sId : null;
+        int? employeeId = int.TryParse(employeeIdClaim, out var eId) ? eId : null;
+
         var query = Db.Orders
             .Include(o => o.Customer)
             .Include(o => o.Employee)
@@ -38,31 +44,19 @@ public class LatestOrdersHandler : BaseHandler
             .OrderByDescending(o => o.OrderDate)
             .AsQueryable();
 
-        // 🔹 Employee: se sina egna orders
-        if (roles.Contains("Employee"))
+        // 🔹 Employee: endast sina ordrar
+        if (roles.Contains("Employee") && employeeId.HasValue)
         {
-            var employeeId = user.FindFirstValue("EmployeeId");
-            if (int.TryParse(employeeId, out var id))
-                query = query.Where(o => o.EmployeeId == id);
-            else
-                return Array.Empty<object>();
+            query = query.Where(o => o.EmployeeId == employeeId.Value);
         }
 
-        // 🔹 Supplier: se orders med deras produkter
-        else if (roles.Contains("Supplier"))
+        // 🔹 Supplier: endast ordrar som innehåller hans produkter
+        else if (roles.Contains("Supplier") && supplierId.HasValue)
         {
-            var supplierId = user.FindFirstValue("SupplierId");
-            if (int.TryParse(supplierId, out var sid))
-                query = query.Where(o => o.OrderDetails.Any(d => d.Product.SupplierId == sid));
+            query = query.Where(o => o.OrderDetails.Any(d => d.Product.SupplierId == supplierId.Value));
         }
 
-        // 🔹 Manager: ser alla orders (Northwinds egna)
-        else if (roles.Contains("Manager"))
-        {
-            // Managers är Northwind-personal → ser allt
-        }
-
-        // 🔹 Admin: ser allt
+        // 🔹 Manager/Admin → inga filter
 
         var data = await query
             .Take(top)
@@ -73,7 +67,9 @@ public class LatestOrdersHandler : BaseHandler
                 employee = o.Employee != null ? o.Employee.FirstName + " " + o.Employee.LastName : "(Ingen)",
                 date = o.OrderDate,
                 total = Math.Round(
-                    o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount)),
+                    o.OrderDetails
+                        .Where(d => !supplierId.HasValue || d.Product.SupplierId == supplierId.Value)
+                        .Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount)),
                     1)
             })
             .AsNoTracking()

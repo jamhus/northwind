@@ -1,42 +1,68 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Northwind.Dashboard.Engine;
-using Northwind.Models;
 using Northwind.Models.Data;
+using System.Security.Claims;
 
 namespace Northwind.Dashboard.Handlers;
 
 public class SalesPerMonthHandler : BaseHandler
 {
-    public override string Type => "SalesPerMonth";
-    public SalesPerMonthHandler(NorthwindContext db) : base(db) { }
+    private readonly IHttpContextAccessor _http;
 
-    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
+    public SalesPerMonthHandler(NorthwindContext db, IHttpContextAccessor http) : base(db)
     {
-        var query = FilterOrders(
-            Db.Orders
-                .Include(o => o.OrderDetails),
-            ps
-        );
+        _http = http;
+    }
 
-        var grouped = await query
-            .Where(o => o.OrderDate != null)
-            .GroupBy(o => new { o.OrderDate!.Value.Year, o.OrderDate!.Value.Month })
+    public override string Type => "SalesPerMonth";
+
+    public override async Task<object?> ExecuteItemAsync(
+        Dictionary<string, object> settings,
+        ParameterStore store,
+        CancellationToken ct)
+    {
+        var user = _http.HttpContext?.User;
+        var role = user?.FindFirstValue(ClaimTypes.Role);
+        var supplierId = user?.FindFirstValue("SupplierId");
+        var employeeId = user?.FindFirstValue("EmployeeId");
+
+        var query = Db.OrderDetails
+            .Include(d => d.Order)
+            .Include(d => d.Product)
+            .Where(d => d.Order!.OrderDate != null)
+            .AsQueryable();
+
+        if (role == "Supplier" && int.TryParse(supplierId, out var sid))
+        {
+            query = query.Where(d => d.Product.SupplierId == sid);
+        }
+        else if (role == "Employee" && int.TryParse(employeeId, out var eid))
+        {
+            query = query.Where(d => d.Order.EmployeeId == eid);
+        }
+
+        var result = await query
+            .GroupBy(d => new
+            {
+                d.Order!.OrderDate!.Value.Year,
+                d.Order!.OrderDate!.Value.Month
+            })
             .Select(g => new
             {
                 Year = g.Key.Year,
                 Month = g.Key.Month,
-                TotalSales = g.SelectMany(o => o.OrderDetails)
-                              .Sum(od => od.Quantity * od.UnitPrice)
+                TotalSales = g.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
             })
-            .OrderBy(x => x.Year)
-            .ThenBy(x => x.Month)
+            .OrderBy(g => g.Year).ThenBy(g => g.Month)
+            .AsNoTracking()
             .ToListAsync(ct);
 
-        return grouped.Select(x => new
+        // avrunda till 1 decimal
+        return result.Select(x => new
         {
-            x.Year,
-            x.Month,
-            TotalSales = Round(x.TotalSales, 1)
-        });
+            year = x.Year,
+            month = x.Month,
+            totalSales = Math.Round(x.TotalSales, 1)
+        }).ToList();
     }
 }
