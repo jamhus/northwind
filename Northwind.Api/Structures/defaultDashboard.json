@@ -63,7 +63,7 @@
       "expression": "Handler.TopEmployees(6)"
     }
   ],
-  "reportPages": [
+  "pages": [
     {
       "key": "mainDashboard",
       "name": [
@@ -95,10 +95,10 @@
           }
         ]
       },
-      "reportPageItems": [
+      "pageItems": [
         {
           "key": "totalSalesCard",
-          "reportPageItemType": "TotalSales",
+          "pageItemType": "TotalSales",
           "settings": {
             "parameterKey": "totalSales",
             "title": "Total försäljning",
@@ -110,7 +110,7 @@
         },
         {
           "key": "totalOrdersCard",
-          "reportPageItemType": "TotalOrders",
+          "pageItemType": "TotalOrders",
           "settings": {
             "parameterKey": "totalOrders",
             "title": "Antal ordrar",
@@ -119,7 +119,7 @@
         },
         {
           "key": "totalCustomersCard",
-          "reportPageItemType": "TotalCustomers",
+          "pageItemType": "TotalCustomers",
           "settings": {
             "parameterKey": "totalCustomers",
             "title": "Kunder",
@@ -128,7 +128,7 @@
         },
         {
           "key": "salesPerMonthChart",
-          "reportPageItemType": "SalesPerMonth",
+          "pageItemType": "SalesPerMonth",
           "settings": {
             "parameterKey": "salesPerMonth",
             "title": "Försäljning per månad",
@@ -138,7 +138,7 @@
         },
         {
           "key": "topProductsChart",
-          "reportPageItemType": "TopProducts",
+          "pageItemType": "TopProducts",
           "settings": {
             "parameterKey": "topProducts",
             "title": "Topp 5 produkter",
@@ -148,7 +148,7 @@
         },
         {
           "key": "salesPerRegionChart",
-          "reportPageItemType": "SalesPerRegion",
+          "pageItemType": "SalesPerRegion",
           "settings": {
             "parameterKey": "salesPerRegion",
             "suffix": " kr",
@@ -170,7 +170,7 @@
         },
         {
           "key": "topEmployeesChart",
-          "reportPageItemType": "TopEmployees",
+          "pageItemType": "TopEmployees",
           "settings": {
             "parameterKey": "topEmployees",
             "title": "Prestation per anställd",

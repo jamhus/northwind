@@ -20,7 +20,6 @@ export default function SupplierSelect({
   onChange,
   className = "",
 }: Props) {
-
   const {
     data: suppliers = [],
     isLoading,
@@ -29,8 +28,8 @@ export default function SupplierSelect({
     queryKey: ["suppliers"],
     queryFn: supplierService.getAllForSelect,
   });
-  
- const { selected, setSelected } = useSyncedSelection<Supplier>(
+
+  const { selected, setSelected } = useSyncedSelection<Supplier>(
     suppliers,
     value,
     "supplierId"
@@ -77,6 +76,13 @@ export default function SupplierSelect({
           {/* Alternativ */}
           {open && (
             <ListboxOptions className="absolute mt-1 w-full bg-white shadow-lg border rounded max-h-60 overflow-auto z-50">
+              <ListboxOption
+                key="northwind-default"
+                value={{ supplierId: 0, companyName: "Northwind (Global default)" }}
+                className="cursor-pointer px-3 py-2 hover:bg-blue-100 text-gray-700"
+              >
+                🌍 Northwind (Global default)
+              </ListboxOption>
               {suppliers.map((s) => (
                 <ListboxOption
                   key={s.supplierId}

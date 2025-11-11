@@ -1,8 +1,8 @@
 import { componentRegistry } from "./registery";
-import type { ReportPageItem } from "../../api/dashboard.service";
+import type { PageItem } from "../../api/dashboard.service";
 type Props = {
   itemRef: string;
-  items: ReportPageItem[];
+  items: PageItem[];
 };
 
 export default function ItemRenderer({ itemRef, items }: Props) {

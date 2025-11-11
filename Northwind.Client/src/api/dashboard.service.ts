@@ -20,7 +20,7 @@ export interface ParameterDefinition {
 
 // ---------- REPORT PAGE ----------
 
-export interface ReportPageItem {
+export interface PageItem {
   key: string;
   enabled: boolean;
   order: number;
@@ -33,7 +33,7 @@ export interface ReportPageItem {
 export interface Condition {
   logic: "And" | "Or";
   conditions: {
-    operator: "Eq" | "Ne" | "Gt" | "Lt" | "Gte" | "Lte";
+    operator: "Eq" | "Ne" | "Gt" | "Lt" | "Gte" | "Lte" | "Contains";
     leftSource: "Parameter" | "Const" | "None";
     leftField?: string;
     rightSource: "Parameter" | "Const" | "None";
@@ -58,12 +58,12 @@ export interface LayoutDefinition {
 
 // ---------- REPORT PAGE ----------
 
-export interface ReportPage {
+export interface Page {
   key: string;
   name?: { language: string; text: string }[];
   enabled: boolean;
   layout: LayoutDefinition;
-  reportPageItems: ReportPageItem[];
+  pageItems: PageItem[];
 }
 
 // ---------- ROOT DASHBOARD ----------
@@ -73,7 +73,7 @@ export interface DashboardDefinition {
   companyId: number;
   type: "Dashboard" | string;
   parameters: ParameterDefinition[];
-  pages: ReportPage[];
+  pages: Page[];
 }
 
 export const dashboardService = {

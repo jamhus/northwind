@@ -1,5 +1,5 @@
 import type { DashboardDefinition } from "../../api/dashboard.service";
-import ReportPageRenderer from "./ReportPageRenderer";
+import PageRenderer from "./PageRenderer";
 
 type Props = {
   definition: DashboardDefinition;
@@ -12,7 +12,7 @@ export default function DashboardRenderer({ definition }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">{page.name?.[0]?.text}</h1>
-      <ReportPageRenderer page={page} />
+      <PageRenderer page={page} />
     </div>
   );
 }

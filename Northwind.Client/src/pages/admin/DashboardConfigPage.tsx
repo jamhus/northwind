@@ -4,31 +4,51 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github";
 import { notify } from "../../components/common/Notify";
 import ModalWrapper from "../products/modals/ModalWrapper";
-import { useQuery, useMutation } from "@tanstack/react-query";
 import DashboardRenderer from "../dashboard/DashboardRenderer";
+import SupplierSelect from "../../components/common/SupplierSelect";
 import defaultDashboard from "../../structures/defaultDashboard.json";
 import { dashboardConfigService } from "../../api/dashboardConfig.service";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function DashboardConfigPage() {
   const [jsonValue, setJsonValue] = useState("{}");
+  const [previewData, setPreviewData] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<number>(0);
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["dashboard-config"],
-    queryFn: dashboardConfigService.get,
+  const queryClient = useQueryClient();
+
+  // 🔹 Hämtar config beroende på vald supplier
+  const {
+    data: config,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["dashboard-config", selectedSupplier],
+    queryFn: async () => await dashboardConfigService.get(selectedSupplier),
+    enabled: selectedSupplier !== undefined,
   });
 
   useEffect(() => {
-    if (data) {
-      setJsonValue(JSON.stringify(data, null, 2));
+    if (config) {
+      setJsonValue(JSON.stringify(config, null, 2));
+    } else {
+      setJsonValue("{}");
     }
-  }, [data]);
+  }, [config]);
 
-  const { mutate: saveConfig, isPending } = useMutation({
-    mutationFn: dashboardConfigService.update,
+  // 🔹 Mutation för att spara config
+  const { mutate: saveConfig, isPending: isSaving } = useMutation({
+    mutationFn: ({
+      companyId,
+      parsed,
+    }: {
+      companyId: number;
+      parsed: object;
+    }) => dashboardConfigService.update(companyId, parsed),
     onSuccess: () => {
       notify("Konfiguration sparad!", "success");
-      refetch();
+      queryClient.invalidateQueries({ queryKey: ["dashboard-config"] });
     },
     onError: () => notify("Kunde inte spara konfigurationen", "error"),
   });
@@ -36,7 +56,7 @@ export default function DashboardConfigPage() {
   const handleSave = () => {
     try {
       const parsed = JSON.parse(jsonValue);
-      saveConfig(parsed);
+      saveConfig({ companyId: selectedSupplier, parsed });
     } catch {
       notify("JSON:et är ogiltigt!", "error");
     }
@@ -47,12 +67,25 @@ export default function DashboardConfigPage() {
     notify("Återställd till standardlayout!", "success");
   };
 
-  const handlePreview = () => {
+  const handlePreview = async () => {
+  try {
+    const parsed = JSON.parse(jsonValue);
+    const rendered = await dashboardConfigService.preview(parsed);
+    setPreviewData(rendered);
+    setPreviewOpen(true);
+  } catch {
+    notify("Kunde inte rendera förhandsgranskning", "error");
+  }
+};
+
+  const handleFetch = async () => {
     try {
-      JSON.parse(jsonValue);
-      setPreviewOpen(true);
+      await queryClient.invalidateQueries({
+        queryKey: ["dashboard-config", selectedSupplier],
+      });
+      notify("Konfiguration hämtad!", "success");
     } catch {
-      notify("Ogiltig JSON – kan inte förhandsgranska!", "error");
+      notify("Kunde inte hämta konfigurationen", "error");
     }
   };
 
@@ -62,7 +95,7 @@ export default function DashboardConfigPage() {
         <h1 className="text-2xl font-semibold text-gray-700">
           Dashboard-konfiguration
         </h1>
-        <div className="flex items-center gap-3">
+        <div className="flex gap-3">
           <button
             onClick={handleReset}
             className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-800"
@@ -77,15 +110,37 @@ export default function DashboardConfigPage() {
           </button>
           <button
             onClick={handleSave}
-            disabled={isPending}
+            disabled={isSaving}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            {isPending ? "Sparar..." : "Spara"}
+            {isSaving ? "Sparar..." : "Spara"}
           </button>
         </div>
       </div>
 
-      {isLoading ? (
+      {/* 🔹 Välj leverantör */}
+      <div className="mb-4">
+        <label className="block text-sm text-gray-600 mb-1">
+          Företag / Leverantör
+        </label>
+        <SupplierSelect
+          value={selectedSupplier ?? undefined}
+          onChange={(supplier) =>
+            setSelectedSupplier(supplier?.supplierId ?? null)
+          }
+        />
+        <button
+          onClick={handleFetch}
+          disabled={isPending}
+          className="mt-2 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          {isPending ? "Hämtar..." : "Hämta konfiguration"}
+        </button>
+      </div>
+
+      {isError ? (
+        <div className="text-red-500">Kunde inte hämta konfiguration.</div>
+      ) : isPending ? (
         <div className="text-gray-500">Laddar konfiguration...</div>
       ) : (
         <AceEditor
@@ -106,7 +161,7 @@ export default function DashboardConfigPage() {
         />
       )}
 
-      {/* 🔹 Förhandsgranskning */}
+      {/* Förhandsgranskning */}
       {previewOpen && (
         <ModalWrapper
           isOpen={previewOpen}
@@ -114,9 +169,7 @@ export default function DashboardConfigPage() {
           title="Förhandsgranskning"
         >
           <div className="h-[80vh] overflow-auto bg-gray-50 rounded p-4">
-            <DashboardRenderer
-              definition={JSON.parse(jsonValue)}
-            />
+            <DashboardRenderer definition={previewData!} />
           </div>
         </ModalWrapper>
       )}

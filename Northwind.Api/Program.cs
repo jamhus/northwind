@@ -60,7 +60,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<Northwind.Dashboard.Engine.ConditionEvaluator>();
 builder.Services.AddScoped<Northwind.Dashboard.Engine.DynamicDataService>();
 builder.Services.AddScoped<Northwind.Dashboard.Engine.ParameterEvaluator>();
-builder.Services.AddScoped<Northwind.Dashboard.Engine.ReportPageExecutor>();
+builder.Services.AddScoped<Northwind.Dashboard.Engine.PageExecutor>();
 builder.Services.AddScoped<Northwind.Dashboard.Engine.DashboardRuntimeService>();
 
 // Handlers

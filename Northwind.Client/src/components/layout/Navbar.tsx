@@ -106,13 +106,7 @@ export default function Navbar() {
           </div>
 
           {user?.roles.includes("Admin") && (
-            <>
-            <NavLink
-              to="/dashboardV2"
-              className="flex items-center gap-1 hover:text-gray-300"
-            >
-              <LogIn size={16} /> Dashboard V2
-            </NavLink>
+ 
             <div className="relative" ref={adminRef}>
               <button
                 onClick={() => setOpenAdmin(!openAdmin)}
@@ -149,7 +143,6 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            </>
           )}
 
           {!isAuthenticated ? (

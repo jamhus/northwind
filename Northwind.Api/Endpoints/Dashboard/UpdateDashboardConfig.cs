@@ -27,7 +27,7 @@ public class UpdateDashboardConfig : EndpointBaseAsync
     {
         var entity = new DashboardConfig
         {
-            CompanyId = request.CompanyId ?? 1,
+            CompanyId = request.CompanyId,
             ConfigJson = request.Json,
             CreatedAt = DateTime.UtcNow
         };
@@ -41,6 +41,6 @@ public class UpdateDashboardConfig : EndpointBaseAsync
 
 public class DashboardConfigRequest
 {
-    public int? CompanyId { get; set; }
+    public int CompanyId { get; set; }
     public string Json { get; set; } = string.Empty;
 }

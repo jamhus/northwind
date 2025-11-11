@@ -16,8 +16,8 @@ public class DashboardDefinition
     [JsonPropertyName("parameters")]
     public List<ParameterDefinition> Parameters { get; set; } = [];
 
-    [JsonPropertyName("reportPages")]
-    public List<ReportPage> ReportPages { get; set; } = [];
+    [JsonPropertyName("pages")]
+    public List<Page> Pages { get; set; } = [];
 }
 
 public class ParameterDefinition
@@ -41,7 +41,7 @@ public class ParameterDefinition
     public string? Description { get; set; }
 }
 
-public class ReportPage
+public class Page
 {
     [JsonPropertyName("key")]
     public string Key { get; set; } = "";
@@ -55,8 +55,8 @@ public class ReportPage
     [JsonPropertyName("layout")]
     public Layout Layout { get; set; } = new();
 
-    [JsonPropertyName("reportPageItems")]
-    public List<ReportPageItem> ReportPageItems { get; set; } = [];
+    [JsonPropertyName("pageItems")]
+    public List<PageItem> PageItems { get; set; } = [];
 }
 
 public class LocalizedName
@@ -89,19 +89,19 @@ public class LayoutRow
 public class LayoutColumn
 {
     [JsonPropertyName("itemRef")]
-    public string? ItemRef { get; set; } // refererar till ReportPageItems[key]
+    public string? ItemRef { get; set; } // refererar till PageItems[key]
 
     [JsonPropertyName("style")]
     public Dictionary<string, object>? Style { get; set; }
 }
 
-public class ReportPageItem
+public class PageItem
 {
     [JsonPropertyName("key")]
     public string Key { get; set; } = "";
 
-    [JsonPropertyName("reportPageItemType")]
-    public string ReportPageItemType { get; set; } = ""; // matchar handler.Type
+    [JsonPropertyName("pageItemType")]
+    public string PageItemType { get; set; } = ""; // matchar handler.Type
 
     [JsonPropertyName("settings")]
     public Dictionary<string, object>? Settings { get; set; }

@@ -10,7 +10,7 @@ public class RenderedPage
     public string Key { get; set; } = "";
     public string Title { get; set; } = "";
     public List<LocalizedName> Name { get; set; }
-    public List<RenderedItem> ReportPageItems { get; set; } = [];
+    public List<RenderedItem> PageItems { get; set; } = [];
     public Layout? Layout { get; set; }
 }
 
@@ -18,7 +18,7 @@ public class RenderedPage
 public class RenderedItem
 {
     public string Key { get; set; } = "";
-    public string Type { get; set; } = ""; // ReportPageItemType (t.ex. "TopProducts")
+    public string Type { get; set; } = ""; // PageItemType (t.ex. "TopProducts")
     public Dictionary<string, object>? Settings { get; set; }
     public object? Data { get; set; }
 }

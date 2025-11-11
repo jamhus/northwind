@@ -3,18 +3,18 @@ using Northwind.Dashboard.Handlers;
 
 namespace Northwind.Dashboard.Engine;
 
-public class ReportPageExecutor
+public class PageExecutor
 {
     private readonly IEnumerable<IReportItemHandler> _handlers;
     private readonly ConditionEvaluator _conditions;
 
-    public ReportPageExecutor(IEnumerable<IReportItemHandler> handlers, ConditionEvaluator conditions)
+    public PageExecutor(IEnumerable<IReportItemHandler> handlers, ConditionEvaluator conditions)
     {
         _handlers = handlers;
         _conditions = conditions;
     }
 
-    public async Task<List<RenderedPage>> ExecuteAsync(IEnumerable<ReportPage> pages,
+    public async Task<List<RenderedPage>> ExecuteAsync(IEnumerable<Page> pages,
         ParameterStore store,
         Func<string, string?> claimAccessor,
         CancellationToken ct)
@@ -37,22 +37,22 @@ public class ReportPageExecutor
                 foreach (var col in row.Columns)
                 {
                     if (string.IsNullOrWhiteSpace(col.ItemRef)) continue;
-                    var item = page.ReportPageItems.FirstOrDefault(i => i.Key == col.ItemRef);
+                    var item = page.PageItems.FirstOrDefault(i => i.Key == col.ItemRef);
                     if (item is null) continue;
 
                     if (!_conditions.Evaluate(item.Condition, store, claimAccessor))
                         continue;
 
                     var handler = _handlers.FirstOrDefault(h =>
-                        h.Type.Equals(item.ReportPageItemType, StringComparison.OrdinalIgnoreCase));
+                        h.Type.Equals(item.PageItemType, StringComparison.OrdinalIgnoreCase));
 
                     if (handler is null) continue;
 
                     var data = await handler.ExecuteItemAsync(item.Settings ?? new(), store, ct);
-                    rp.ReportPageItems.Add(new RenderedItem
+                    rp.PageItems.Add(new RenderedItem
                     {
                         Key = item.Key,
-                        Type = item.ReportPageItemType,
+                        Type = item.PageItemType,
                         Settings = item.Settings,
                         Data = data
                     });

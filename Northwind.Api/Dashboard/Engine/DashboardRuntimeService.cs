@@ -8,10 +8,10 @@ namespace Northwind.Dashboard.Engine;
 public class DashboardRuntimeService
 {
     private readonly ParameterEvaluator _parameters;
-    private readonly ReportPageExecutor _executor;
+    private readonly PageExecutor _executor;
     private readonly DynamicDataService _dynamic;
 
-    public DashboardRuntimeService(ParameterEvaluator parameters, ReportPageExecutor executor, DynamicDataService dynamic)
+    public DashboardRuntimeService(ParameterEvaluator parameters, PageExecutor executor, DynamicDataService dynamic)
     {
         _parameters = parameters;
         _executor = executor;
@@ -33,7 +33,7 @@ public class DashboardRuntimeService
 
         string? ClaimAccessor(string type) => user.FindFirstValue(type);
 
-        var pages = await _executor.ExecuteAsync(def.ReportPages, store, ClaimAccessor, ct);
+        var pages = await _executor.ExecuteAsync(def.Pages, store, ClaimAccessor, ct);
         return new RenderedDashboardResult { Pages = pages };
     }
 }

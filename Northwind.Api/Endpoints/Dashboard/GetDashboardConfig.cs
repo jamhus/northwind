@@ -1,13 +1,14 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Northwind.Endpoints.Products;
 using Northwind.Models;
 using Northwind.Models.Data;
 
 namespace Northwind.Endpoints.Dashboard;
 
 public class GetDashboardConfig : EndpointBaseAsync
-    .WithoutRequest
+    .WithRequest<int>
     .WithActionResult<object>
 {
     private readonly NorthwindContext _db;
@@ -19,26 +20,33 @@ public class GetDashboardConfig : EndpointBaseAsync
         _env = env;
     }
 
-    [HttpGet("api/dashboardConfig")]
-    public override async Task<ActionResult<object>> HandleAsync(CancellationToken ct = default)
+    [HttpGet("api/dashboardConfig/{companyId}", Name = nameof(GetDashboardConfig))]
+    public override async Task<ActionResult<object>> HandleAsync(
+        int companyId,
+        CancellationToken ct = default)
     {
-        var config = await _db.DashboardConfigs.AsNoTracking()
+
+        // 🔹 1. Försök hitta en config i databasen för det företaget
+        var config = await _db.DashboardConfigs
+            .AsNoTracking()
+            .Where(x => x.CompanyId == companyId)
             .OrderByDescending(x => x.Id)
             .FirstOrDefaultAsync(ct);
 
         if (config != null)
             return Ok(config.ConfigJson);
 
+        // 🔹 2. Fanns inget – ladda defaultDashboard.json från filsystemet
         var path = Path.Combine(_env.ContentRootPath, "Structures", "defaultDashboard.json");
 
         if (System.IO.File.Exists(path))
         {
             var defaultJson = await System.IO.File.ReadAllTextAsync(path, ct);
 
-            // valfritt: spara i databasen direkt
+            // 🔹 3. Valfritt: spara i databasen direkt (så nästa gång laddas snabbare)
             _db.DashboardConfigs.Add(new DashboardConfig
             {
-                CompanyId = 1,
+                CompanyId = companyId,
                 ConfigJson = defaultJson,
                 CreatedAt = DateTime.UtcNow
             });
@@ -47,6 +55,7 @@ public class GetDashboardConfig : EndpointBaseAsync
             return Ok(defaultJson);
         }
 
-        return Ok(new { message = "No dashboard config found, and no default file available." });
+        // 🔹 4. Om inget hittas alls
+        return NotFound(new { message = "No dashboard config found or default file missing." });
     }
 }
