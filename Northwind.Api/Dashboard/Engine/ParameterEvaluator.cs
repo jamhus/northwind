@@ -6,10 +6,10 @@ namespace Northwind.Dashboard.Engine;
 
 public class ParameterEvaluator
 {
-    private readonly IEnumerable<IReportItemHandler> _handlers;
+    private readonly IEnumerable<IPageItemHandler> _handlers;
     private readonly DynamicDataService _dynamic;
 
-    public ParameterEvaluator(IEnumerable<IReportItemHandler> handlers, DynamicDataService dynamic)
+    public ParameterEvaluator(IEnumerable<IPageItemHandler> handlers, DynamicDataService dynamic)
     {
         _handlers = handlers;
         _dynamic = dynamic;

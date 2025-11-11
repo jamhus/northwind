@@ -5,29 +5,38 @@ using Northwind.Models.Data;
 
 namespace Northwind.Dashboard.Handlers;
 
-public class SalesByMonthHandler : BaseHandler
+public class SalesPerMonthHandler : BaseHandler
 {
-    public SalesByMonthHandler(NorthwindContext db) : base(db) { }
-    public override string Type => "SalesPerMonth"; // parameterKey: "salesPerMonth" i din JSON
+    public override string Type => "SalesPerMonth";
+    public SalesPerMonthHandler(NorthwindContext db) : base(db) { }
 
-    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
+    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
-        var data = await Db.Orders
+        var query = FilterOrders(
+            Db.Orders
+                .Include(o => o.OrderDetails),
+            ps
+        );
+
+        var grouped = await query
             .Where(o => o.OrderDate != null)
-            .OrderBy(o => o.OrderDate)
-            .Select(o => new
+            .GroupBy(o => new { o.OrderDate!.Value.Year, o.OrderDate!.Value.Month })
+            .Select(g => new
             {
-                Month = $"{o.OrderDate!.Value:yyyy-MM}",
-                Total = Math.Round(o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount)),1)
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                TotalSales = g.SelectMany(o => o.OrderDetails)
+                              .Sum(od => od.Quantity * od.UnitPrice)
             })
-            .AsNoTracking()
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
             .ToListAsync(ct);
 
-        var result = data.GroupBy(x => x.Month)
-                         .Select(g => new { month = g.Key, totalSales = g.Sum(x => x.Total) })
-                         .OrderBy(x => x.month)
-                         .ToList();
-
-        return result;
+        return grouped.Select(x => new
+        {
+            x.Year,
+            x.Month,
+            TotalSales = Round(x.TotalSales, 1)
+        });
     }
 }

@@ -11,7 +11,7 @@ import { Card, CardContent } from "../../../components/ui/Card";
 
 type Props = {
   settings: { title: string; color?: string };
-  data?: { name: string; total: number }[];
+  data?: { product: string; totalSales: number }[];
 };
 
 export default function TopProductsChart({ settings, data = [] }: Props) {
@@ -22,7 +22,7 @@ export default function TopProductsChart({ settings, data = [] }: Props) {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="product" />
             <YAxis />
             <Tooltip />
             <Bar dataKey="totalSales" fill="#10b981" />

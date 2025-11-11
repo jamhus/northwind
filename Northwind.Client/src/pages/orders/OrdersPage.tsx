@@ -25,6 +25,7 @@ export default function OrdersPage() {
     <div className="p-8">
       <Table<Order>
         title="Ordrar"
+        onRowClick={(o) => setSelected(o)}
         data={orders}
         columns={[
           { key: "orderId", label: "ID" },
@@ -34,7 +35,6 @@ export default function OrdersPage() {
           { key: "shipCountry", label: "Land" },
           { key: "total", label: "Totalt", render: (o) => o.total.toFixed(2) + " kr" },
         ]}
-        onEdit={(o) => setSelected(o)}
       />
       <Pagination
         page={data?.page ?? 1}

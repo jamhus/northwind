@@ -2,12 +2,12 @@ import { DollarSign } from "lucide-react";
 import StatCard from "./childs/StateCard";
 
 type Props = {
-  settings: { title: string; prefix?: string; suffix?: string };
-  data?: { totalSales?: number };
+  settings: { title: string; suffix?: string };
+  data?: number;
 };
 
 export default function TotalSalesCard({ settings, data }: Props) {
   return (
-    <StatCard icon={<DollarSign />} label="Total försäljning" value={`${settings.prefix} ${data?.totalSales?.toLocaleString("sv-SE")} ${settings.suffix}`} />
+    <StatCard icon={<DollarSign />} label={settings.title} value={`${data?.toLocaleString("sv-SE")} ${settings.suffix}`} />
   );
 }

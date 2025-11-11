@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Northwind.Auth;
+using Northwind.Dashboard.Handlers;
 using Northwind.Models;
 using Northwind.Models.Data;
 using System.Text;
@@ -64,13 +65,17 @@ builder.Services.AddScoped<Northwind.Dashboard.Engine.PageExecutor>();
 builder.Services.AddScoped<Northwind.Dashboard.Engine.DashboardRuntimeService>();
 
 // Handlers
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalSalesHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalOrdersHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TotalCustomersHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.SalesByMonthHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TopProductsHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.SalesPerRegionHandler>();
-builder.Services.AddScoped<Northwind.Dashboard.Handlers.IReportItemHandler, Northwind.Dashboard.Handlers.TopEmployeesHandler>();
+builder.Services.AddScoped<IPageItemHandler, LatestOrdersHandler>();
+builder.Services.AddScoped<IPageItemHandler, SalesPerMonthHandler>();
+builder.Services.AddScoped<IPageItemHandler, SalesPerRegionHandler>();
+builder.Services.AddScoped<IPageItemHandler, TopCustomersHandler>();
+builder.Services.AddScoped<IPageItemHandler, TopEmployeesHandler>();
+builder.Services.AddScoped<IPageItemHandler, TopProductsHandler>();
+builder.Services.AddScoped<IPageItemHandler, TotalSalesHandler>();
+builder.Services.AddScoped<IPageItemHandler, TotalCustomersHandler>();
+builder.Services.AddScoped<IPageItemHandler, TotalOrdersHandler>();
+
+
 
 
 builder.Services.AddOpenApi();

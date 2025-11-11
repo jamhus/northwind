@@ -7,25 +7,37 @@ namespace Northwind.Dashboard.Handlers;
 
 public class TopProductsHandler : BaseHandler
 {
-    public TopProductsHandler(NorthwindContext db) : base(db) { }
     public override string Type => "TopProducts";
+    public TopProductsHandler(NorthwindContext db) : base(db) { }
 
-    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
+    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
         var top = GetTopArg(settings, 5);
 
-        var data = await Db.OrderDetails
-            .GroupBy(d => d.Product!.ProductName)
+        var query = FilterOrders(
+            Db.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product),
+            ps
+        );
+
+        var topProducts = await query
+            .SelectMany(o => o.OrderDetails)
+            .Where(od => od.Product != null)
+            .GroupBy(od => od.Product.ProductName)
             .Select(g => new
             {
-                name = g.Key!,
-                totalSales = Math.Round(g.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount)),1)
+                Product = g.Key,
+                TotalSales = g.Sum(od => od.Quantity * od.UnitPrice)
             })
-            .OrderByDescending(x => x.totalSales)
+            .OrderByDescending(x => x.TotalSales)
             .Take(top)
-            .AsNoTracking()
             .ToListAsync(ct);
 
-        return data;
+        return topProducts.Select(x => new
+        {
+            x.Product,
+            TotalSales = Round(x.TotalSales, 1)
+        });
     }
 }

@@ -7,12 +7,12 @@ namespace Northwind.Dashboard.Handlers;
 
 public class TotalOrdersHandler : BaseHandler
 {
-    public TotalOrdersHandler(NorthwindContext db) : base(db) { }
     public override string Type => "TotalOrders";
+    public TotalOrdersHandler(NorthwindContext db) : base(db) { }
 
-    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
+    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
-        var count = await Db.Orders.CountAsync(ct);
-        return new { totalOrders = count };
+        var count = await FilterOrders(Db.Orders, ps).CountAsync(ct);
+        return count;
     }
 }

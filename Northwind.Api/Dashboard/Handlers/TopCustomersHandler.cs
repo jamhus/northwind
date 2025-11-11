@@ -5,28 +5,24 @@ using Northwind.Models.Data;
 
 namespace Northwind.Dashboard.Handlers;
 
-public class TopEmployeesHandler : BaseHandler
+public class TopCustomersHandler : BaseHandler
 {
-    public override string Type => "TopEmployees";
-    public TopEmployeesHandler(NorthwindContext db) : base(db) { }
+    public override string Type => "TopCustomers";
+    public TopCustomersHandler(NorthwindContext db) : base(db) { }
 
     public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
-        var top = GetTopArg(settings, 6);
+        var top = GetTopArg(settings, 5);
+        var query = FilterOrders(Db.Orders
+            .Include(o => o.Customer)
+            .Include(o => o.OrderDetails), ps);
 
-        var query = FilterOrders(
-            Db.Orders
-                .Include(o => o.Employee)
-                .Include(o => o.OrderDetails),
-            ps
-        );
-
-        var topEmployees = await query
-            .Where(o => o.Employee != null)
-            .GroupBy(o => new { o.Employee.FirstName, o.Employee.LastName })
+        var topCustomers = await query
+            .Where(o => o.Customer != null)
+            .GroupBy(o => o.Customer.CompanyName)
             .Select(g => new
             {
-                EmployeeName = g.Key.FirstName + " " + g.Key.LastName,
+                Customer = g.Key,
                 TotalSales = g.SelectMany(o => o.OrderDetails)
                               .Sum(od => od.Quantity * od.UnitPrice)
             })
@@ -34,9 +30,9 @@ public class TopEmployeesHandler : BaseHandler
             .Take(top)
             .ToListAsync(ct);
 
-        return topEmployees.Select(x => new
+        return topCustomers.Select(x => new
         {
-            x.EmployeeName,
+            x.Customer,
             TotalSales = Round(x.TotalSales, 1)
         });
     }

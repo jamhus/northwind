@@ -12,6 +12,7 @@ type TableProps<T> = {
   onAdd?: () => void;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
+  onRowClick?: (item: T) => void;
   title?: string;
   maxHeight?: number;
 };
@@ -22,6 +23,7 @@ export default function Table<T extends object>({
   onAdd,
   onEdit,
   onDelete,
+  onRowClick,
   title = "Data",
   maxHeight,
 }: TableProps<T>) {
@@ -79,6 +81,7 @@ export default function Table<T extends object>({
               data.map((item, idx) => (
                 <tr
                   key={idx}
+                  onClick={onRowClick ? () => onRowClick(item) : undefined}
                   className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition"
                 >
                   {columns.map((col) => (

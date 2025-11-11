@@ -2,7 +2,7 @@
 
 namespace Northwind.Dashboard.Handlers;
 
-public interface IReportItemHandler
+public interface IPageItemHandler
 {
     string Type { get; } // ex: "TotalSales", "TopProducts"
     Task<object?> ExecuteParameterAsync(Dictionary<string, object> args, ParameterStore store, CancellationToken ct);

@@ -14,22 +14,29 @@ public class SalesPerRegionHandler : BaseHandler
     {
         var top = GetTopArg(settings, 6);
 
-        var data = await Db.Orders
+        var query = FilterOrders(
+            Db.Orders.Include(o => o.OrderDetails),
+            store
+        );
+
+        var result = await query
             .Where(o => o.ShipCountry != null)
-            .Select(o => new
+            .GroupBy(o => o.ShipCountry!)
+            .Select(g => new
             {
-                Region = o.ShipCountry!,
-                Total = o.OrderDetails.Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
+                Region = g.Key,
+                TotalSales = g.SelectMany(o => o.OrderDetails)
+                              .Sum(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount))
             })
-            .AsNoTracking()
+            .OrderByDescending(x => x.TotalSales)
             .Take(top)
+            .AsNoTracking()
             .ToListAsync(ct);
 
-        var result = data.GroupBy(x => x.Region)
-                         .Select(g => new { region = g.Key, totalSales = Math.Round(g.Sum(x => x.Total),1) })
-                         .OrderByDescending(x => x.totalSales)
-                         .ToList();
-
-        return result;
+        return result.Select(x => new
+        {
+            region = x.Region ?? "Okänd region",
+            totalSales = Math.Round(x.TotalSales, 1)
+        });
     }
 }

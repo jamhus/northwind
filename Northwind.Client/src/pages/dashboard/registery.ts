@@ -6,7 +6,7 @@ import SalesByMonthChart from "./components/SalesByMonthChart";
 import TopEmployeesChart from "./components/TopEmployeesChart";
 import TotalCustomersCard from "./components/TotalCustomersCard";
 import SalesPerRegionChart from "./components/SalesByRegionChart";
-import LatestOrdersCard from "./components/childs/LatestOrdersCard";
+import LatestOrdersCard from "./components/LatestOrdersCard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentRegistry: Record<string, any> = {

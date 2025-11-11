@@ -7,12 +7,17 @@ namespace Northwind.Dashboard.Handlers;
 
 public class TotalSalesHandler : BaseHandler
 {
-    public TotalSalesHandler(NorthwindContext db) : base(db) { }
     public override string Type => "TotalSales";
+    public TotalSalesHandler(NorthwindContext db) : base(db) { }
 
-    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
+    public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
-        var total = await Db.OrderDetails.SumAsync(d => d.UnitPrice * d.Quantity * (decimal)(1 - d.Discount), ct);
-        return new { totalSales = Math.Round(total,1) };
+        var query = FilterOrders(Db.Orders.Include(o => o.OrderDetails), ps);
+
+        var totalSales = await query
+            .SelectMany(o => o.OrderDetails)
+            .SumAsync(od => od.Quantity * od.UnitPrice, ct);
+
+        return Round(totalSales, 1);
     }
 }

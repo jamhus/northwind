@@ -3,7 +3,7 @@ import StatCard from "./childs/StateCard";
 
 type Props = {
   settings: { title: string; icon?: string };
-  data?: { totalCustomers?: number };
+  data?: number
 };
 
 export default function TotalCustomersCard({ settings, data }: Props) {
@@ -11,7 +11,7 @@ export default function TotalCustomersCard({ settings, data }: Props) {
     <StatCard
       icon={<Users />}
       label={settings.title}
-      value={data?.totalCustomers?.toString() || "0"}
+      value={data?.toString() || "0"}
     />
   );
 }

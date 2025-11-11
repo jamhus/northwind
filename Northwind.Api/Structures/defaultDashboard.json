@@ -1,30 +1,19 @@
 {
-  "version": 3,
-  "companyId": 1,
+  "version": 4,
   "type": "Dashboard",
   "parameters": [
-    {
-      "key": "isAdmin",
-      "initialization": "Expression",
-      "entityType": "User",
-      "expression": "DynamicData.getIsAdmin()",
-      "description": "Currently logged in user is admin",
-      "expiration": "1.00:00:00"
-    },
     {
       "key": "userRoles",
       "initialization": "Expression",
       "entityType": "User",
       "expression": "DynamicData.getCurrentRoles()",
-      "description": "Currently logged in user roles",
-      "expiration": "1.00:00:00"
+      "description": "Current user roles as comma-separated string"
     },
     {
       "key": "totalSales",
       "initialization": "Handler",
       "entityType": "Order",
-      "expression": "Handler.TotalSales()",
-      "description": "Total sales amount for visible orders"
+      "expression": "Handler.TotalSales()"
     },
     {
       "key": "totalOrders",
@@ -45,30 +34,48 @@
       "expression": "Handler.SalesPerMonth()"
     },
     {
+      "key": "salesPerRegion",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.SalesPerRegion()"
+    },
+    {
       "key": "topProducts",
       "initialization": "Handler",
       "entityType": "Product",
       "expression": "Handler.TopProducts(5)"
     },
     {
-      "key": "salesPerRegion",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.SalesPerRegion(5)"
-    },
-    {
       "key": "topEmployees",
       "initialization": "Handler",
       "entityType": "Employee",
       "expression": "Handler.TopEmployees(6)"
+    },
+    {
+      "key": "topCustomers",
+      "initialization": "Handler",
+      "entityType": "Customer",
+      "expression": "Handler.TopCustomers(5)"
+    },
+    {
+      "key": "latestOrders",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.LatestOrders(5)"
     }
   ],
   "pages": [
     {
       "key": "mainDashboard",
       "name": [
-        { "language": "sv", "text": "Orderöversikt" },
-        { "language": "en", "text": "Order Overview" }
+        {
+          "language": "sv",
+          "text": "Orderöversikt"
+        },
+        {
+          "language": "en",
+          "text": "Order Overview"
+        }
       ],
       "enabled": true,
       "layout": {
@@ -76,22 +83,58 @@
         "rows": [
           {
             "columns": [
-              { "itemRef": "totalSalesCard" },
-              { "itemRef": "totalOrdersCard" },
-              { "itemRef": "totalCustomersCard" }
+              {
+                "itemRef": "totalSalesCard"
+              },
+              {
+                "itemRef": "totalOrdersCard"
+              },
+              {
+                "itemRef": "totalCustomersCard"
+              }
             ]
           },
           {
-            "columns": [{ "itemRef": "salesPerMonthChart" }]
+            "columns": [
+              {
+                "itemRef": "salesPerMonthChart"
+              }
+            ]
           },
           {
-            "columns": [{ "itemRef": "topProductsChart" }]
+            "columns": [
+              {
+                "itemRef": "salesPerRegionChart"
+              }
+            ]
           },
           {
-            "columns": [{ "itemRef": "salesPerRegionChart" }]
+            "columns": [
+              {
+                "itemRef": "topProductsChart"
+              }
+            ]
           },
           {
-            "columns": [{ "itemRef": "topEmployeesChart" }]
+            "columns": [
+              {
+                "itemRef": "topCustomersChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "topEmployeesChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "latestOrdersList"
+              }
+            ]
           }
         ]
       },
@@ -102,9 +145,8 @@
           "settings": {
             "parameterKey": "totalSales",
             "title": "Total försäljning",
-            "prefix": "",
             "suffix": " kr",
-            "decimalPlaces": 2,
+            "decimalPlaces": 1,
             "icon": "DollarSign"
           }
         },
@@ -113,7 +155,7 @@
           "pageItemType": "TotalOrders",
           "settings": {
             "parameterKey": "totalOrders",
-            "title": "Antal ordrar",
+            "title": "Totala ordrar",
             "icon": "Package"
           }
         },
@@ -134,6 +176,60 @@
             "title": "Försäljning per månad",
             "chartType": "line",
             "color": "blue"
+          },
+          "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Employee"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
+        },
+        {
+          "key": "salesPerRegionChart",
+          "pageItemType": "SalesPerRegion",
+          "settings": {
+            "parameterKey": "salesPerRegion",
+            "title": "Försäljning per region",
+            "chartType": "pie"
+          },
+          "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
           }
         },
         {
@@ -147,23 +243,30 @@
           }
         },
         {
-          "key": "salesPerRegionChart",
-          "pageItemType": "SalesPerRegion",
+          "key": "topCustomersChart",
+          "pageItemType": "TopCustomers",
           "settings": {
-            "parameterKey": "salesPerRegion",
-            "suffix": " kr",
-            "title": "Försäljning per region",
-            "chartType": "pie"
+            "parameterKey": "topCustomers",
+            "title": "Toppkunder",
+            "chartType": "bar",
+            "color": "teal"
           },
           "condition": {
-            "logic": "And",
+            "logic": "Or",
             "conditions": [
               {
-                "operator": "Eq",
+                "operator": "Contains",
                 "leftSource": "Parameter",
-                "leftField": "isAdmin",
+                "leftField": "userRoles",
                 "rightSource": "Const",
-                "rightValue": "true"
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
               }
             ]
           }
@@ -176,6 +279,53 @@
             "title": "Prestation per anställd",
             "chartType": "bar",
             "color": "orange"
+          },
+          "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
+        },
+        {
+          "key": "latestOrdersList",
+          "pageItemType": "LatestOrders",
+          "settings": {
+            "parameterKey": "latestOrders",
+            "title": "Senaste ordrar",
+            "top": 10
+          },
+          "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Employee"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              }
+            ]
           }
         }
       ]
