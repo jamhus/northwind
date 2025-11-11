@@ -1,4 +1,5 @@
 ﻿using Northwind.Dashboard.Models;
+using System.Globalization;
 
 namespace Northwind.Dashboard.Engine;
 
@@ -7,7 +8,8 @@ public class ConditionEvaluator
     public bool Evaluate(ConditionDto? c, ParameterStore ps, Func<string, string?> claimAccessor)
     {
         if (c == null) return true;
-        // If there are nested conditions, evaluate them based on the logic (And/Or)
+
+        // Hantera logiska grupper (And / Or)
         if (c.Conditions is { Count: > 0 })
         {
             var results = c.Conditions.Select(x => Evaluate(x, ps, claimAccessor));
@@ -18,15 +20,13 @@ public class ConditionEvaluator
 
         var left = Resolve(c.LeftSource, c.LeftField, c.RightValue, ps, claimAccessor);
         var right = Resolve(c.RightSource, c.RightField, c.RightValue, ps, claimAccessor);
+
         return Compare(left, right, c.Operator);
     }
 
-    // Resolves the value based on the source type
-    // if src is "Parameter", it fetches from ParameterStore using field as key
-    // Example-left: Resolve("Parameter", "isAdmin", 1, ps, claimAccessor) => ps.Get("isAdmin") 1 or 0
-    // Example-right: Resolve("Const", null, "1", ps, claimAccessor) => "1"
+    // ------------------------------------------------------------------------
 
-    static object? Resolve(string? src, string? field, string? constVal, ParameterStore ps, Func<string, string?> claim)
+    private static object? Resolve(string? src, string? field, string? constVal, ParameterStore ps, Func<string, string?> claim)
     {
         if (string.Equals(src, "Parameter", StringComparison.OrdinalIgnoreCase))
             return field != null ? ps.Get(field) : null;
@@ -39,27 +39,82 @@ public class ConditionEvaluator
 
         return null;
     }
-    // Compares two objects based on the operator
-    // Supports Eq, Ne, Gt, Lt, Gte, Lte
-    // Example: Compare(5, 3, "Gt") => true
-    static bool Compare(object? l, object? r, string? op)
+
+    // ------------------------------------------------------------------------
+
+    private static bool Compare(object? l, object? r, string? op)
     {
-        if (op is null) return true;
+        if (string.IsNullOrWhiteSpace(op))
+            return true;
 
         string sl = Convert.ToString(l) ?? "";
         string sr = Convert.ToString(r) ?? "";
 
-        return op switch
+        // Numeriska jämförelser (GT, LT, Gte, Lte)
+        bool TryCompareNumeric(out int result)
         {
-            "Eq" => string.Equals(sl, sr, StringComparison.OrdinalIgnoreCase),
-            "Ne" => !string.Equals(sl, sr, StringComparison.OrdinalIgnoreCase),
-            "Gt" => ToDecimal(sl) > ToDecimal(sr),
-            "Lt" => ToDecimal(sl) < ToDecimal(sr),
-            "Gte" => ToDecimal(sl) >= ToDecimal(sr),
-            "Lte" => ToDecimal(sl) <= ToDecimal(sr),
-            _ => true
-        };
+            result = 0;
+            if (double.TryParse(sl, NumberStyles.Any, CultureInfo.InvariantCulture, out var dl) &&
+                double.TryParse(sr, NumberStyles.Any, CultureInfo.InvariantCulture, out var dr))
+            {
+                result = dl.CompareTo(dr);
+                return true;
+            }
+            return false;
+        }
+
+        switch (op)
+        {
+            case "Eq":
+                return string.Equals(sl, sr, StringComparison.OrdinalIgnoreCase);
+
+            case "Neq":
+                return !string.Equals(sl, sr, StringComparison.OrdinalIgnoreCase);
+
+            case "Gt":
+                return TryCompareNumeric(out var gt) && gt > 0;
+
+            case "Lt":
+                return TryCompareNumeric(out var lt) && lt < 0;
+
+            case "Gte":
+                return TryCompareNumeric(out var gte) && gte >= 0;
+
+            case "Lte":
+                return TryCompareNumeric(out var lte) && lte <= 0;
+
+            // 🔹 Nytt: hantera listor av värden
+            case "Contains":
+                return ContainsValue(sl, sr);
+
+            case "NotContains":
+                return !ContainsValue(sl, sr);
+
+            case "In":
+                return IsInList(sl, sr);
+
+            default:
+                return true;
+        }
     }
 
-    static decimal ToDecimal(string s) => decimal.TryParse(s, out var d) ? d : 0m;
+    // ------------------------------------------------------------------------
+
+    private static bool ContainsValue(string left, string right)
+    {
+        if (string.IsNullOrWhiteSpace(left) || string.IsNullOrWhiteSpace(right))
+            return false;
+
+        var parts = left.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return parts.Any(p => string.Equals(p, right, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsInList(string left, string rightList)
+    {
+        if (string.IsNullOrWhiteSpace(left) || string.IsNullOrWhiteSpace(rightList))
+            return false;
+
+        var list = rightList.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return list.Contains(left, StringComparer.OrdinalIgnoreCase);
+    }
 }
