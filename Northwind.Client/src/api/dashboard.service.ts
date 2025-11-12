@@ -69,15 +69,15 @@ export interface Page {
 // ---------- ROOT DASHBOARD ----------
 
 export interface DashboardDefinition {
-  version: number;
-  companyId: number;
-  type: "Dashboard" | string;
-  parameters: ParameterDefinition[];
+  version?: number;
+  companyId?: number;
+  type?: "Dashboard" | string;
+  parameters?: ParameterDefinition[];
   pages: Page[];
 }
 
 export const dashboardService = {
-  get: async () => {
+  render: async () => {
     const res = await api.get("/dashboard/render");
     return res.data;
   },

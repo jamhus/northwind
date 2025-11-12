@@ -57,7 +57,7 @@ public class RenderDashboard : EndpointBaseAsync
         // 🔹 2. Om inget hittas, försök ladda defaultDashboard.json
         if (cfg is null)
         {
-            var path = Path.Combine(_env.ContentRootPath, "Structures", "defaultDashboard.json");
+            var path = Path.Combine(_env.ContentRootPath, "Structures", "compactDefinition.json");
             if (System.IO.File.Exists(path))
             {
                 cfg = await System.IO.File.ReadAllTextAsync(path, ct);

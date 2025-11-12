@@ -6,7 +6,7 @@ type Props = {
 };
 
 export default function DashboardRenderer({ definition }: Props) {
-  const page = definition.pages[0]; // Just nu visar vi första sidan
+  const page = definition.pages[0];
   if (!page) return <div>Ingen dashboard att visa</div>;
 
   return (

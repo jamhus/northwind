@@ -57,6 +57,8 @@ public class Page
 
     [JsonPropertyName("pageItems")]
     public List<PageItem> PageItems { get; set; } = [];
+    [JsonPropertyName("condition")]
+    public ConditionDto? Condition { get; set; }
 }
 
 public class LocalizedName

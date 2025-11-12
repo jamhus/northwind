@@ -24,6 +24,9 @@ public class PageExecutor
 
         foreach (var page in pages.Where(p => p.Enabled))
         {
+            if (!_conditions.Evaluate(page.Condition, store, claimAccessor))
+                continue;
+
             var rp = new RenderedPage
             {
                 Key = page.Key,

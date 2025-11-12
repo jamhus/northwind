@@ -1,0 +1,331 @@
+{
+  "version": 5,
+  "type": "Dashboard",
+  "parameters": [
+    {
+      "key": "userRoles",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.getCurrentRoles()",
+      "description": "Current user roles as comma-separated string"
+    },
+    {
+      "key": "supplierId",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.getSupplierId()",
+      "description": "Supplier ID for logged-in user (if any)"
+    }
+  ],
+  "pages": [
+    {
+      "key": "mainDashboard",
+      "name": [
+        { "language": "sv", "text": "Startsida" },
+        { "language": "en", "text": "Main Dashboard" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          {
+            "columns": [
+              { "itemRef": "totalSalesCard" },
+              { "itemRef": "totalOrdersCard" },
+              { "itemRef": "totalCustomersCard" }
+            ]
+          },
+          { "columns": [{ "itemRef": "salesPerMonthChart" }] },
+          { "columns": [{ "itemRef": "topProductsChart" }] },
+          { "columns": [{ "itemRef": "latestOrdersList" }] }
+        ]
+      },
+      "pageItems": [
+        {
+          "key": "totalSalesCard",
+          "pageItemType": "TotalSales",
+          "settings": {
+            "parameterKey": "totalSales",
+            "title": "Total försäljning",
+            "suffix": " $",
+            "decimalPlaces": 1,
+            "icon": "DollarSign"
+          }
+        },
+        {
+          "key": "totalOrdersCard",
+          "pageItemType": "TotalOrders",
+          "settings": {
+            "parameterKey": "totalOrders",
+            "title": "Totala ordrar",
+            "icon": "Package"
+          }
+        },
+        {
+          "key": "totalCustomersCard",
+          "pageItemType": "TotalCustomers",
+          "settings": {
+            "parameterKey": "totalCustomers",
+            "title": "Kunder",
+            "icon": "Users"
+          }
+        },
+        {
+          "key": "salesPerMonthChart",
+          "pageItemType": "SalesPerMonth",
+          "settings": {
+            "parameterKey": "salesPerMonth",
+            "title": "Försäljning per månad",
+            "chartType": "line",
+            "color": "blue"
+          }
+        },
+        {
+          "key": "topProductsChart",
+          "pageItemType": "TopProducts",
+          "settings": {
+            "parameterKey": "topProducts",
+            "title": "Topp 5 produkter",
+            "chartType": "bar",
+            "color": "green"
+          }
+        },
+        {
+          "key": "latestOrdersList",
+          "pageItemType": "LatestOrders",
+          "settings": {
+            "parameterKey": "latestOrders",
+            "title": "Senaste ordrar",
+            "maxItems": 5
+          }
+        }
+      ]
+    },
+
+    {
+      "key": "managementDashboard",
+      "name": [
+        { "language": "sv", "text": "Ledning" },
+        { "language": "en", "text": "Management" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          { "columns": [{ "itemRef": "salesPerRegionChart" }] },
+          { "columns": [{ "itemRef": "topEmployeesChart" }] },
+          { "columns": [{ "itemRef": "topCustomersChart" }] },
+          { "columns": [{ "itemRef": "supplierTotalSalesChart" }] },
+          { "columns": [{ "itemRef": "avgOrderProcessingTimeCard" }] }
+        ]
+      },
+      "pageItems": [
+        {
+          "key": "salesPerRegionChart",
+          "pageItemType": "SalesPerRegion",
+          "settings": {
+            "parameterKey": "salesPerRegion",
+            "title": "Försäljning per region",
+            "chartType": "pie"
+          },
+          "condition": {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Manager"
+          }
+        },
+        {
+          "key": "topEmployeesChart",
+          "pageItemType": "TopEmployees",
+          "settings": {
+            "parameterKey": "topEmployees",
+            "title": "Prestation per anställd",
+            "chartType": "bar",
+            "color": "orange"
+          },
+          "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
+        },
+        {
+          "key": "topCustomersChart",
+          "pageItemType": "TopCustomers",
+          "settings": {
+            "parameterKey": "topCustomers",
+            "title": "Top Customers",
+            "chartType": "bar",
+            "color": "teal"
+          }
+        },
+        {
+          "key": "supplierTotalSalesChart",
+          "pageItemType": "SupplierTotalSales",
+          "settings": {
+            "parameterKey": "supplierSales",
+            "title": "Total försäljning per leverantör",
+            "chartType": "bar"
+          }
+        },
+        {
+          "key": "avgOrderProcessingTimeCard",
+          "pageItemType": "AvgOrderProcessingTime",
+          "settings": {
+            "title": "Genomsnittlig ordertid (dagar)"
+          }
+        }
+      ]
+    },
+
+    {
+      "key": "supplierDashboard",
+      "name": [
+        { "language": "sv", "text": "Leverantör" },
+        { "language": "en", "text": "Supplier" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          { "columns": [{ "itemRef": "supplierTotalSalesCard" }] },
+          { "columns": [{ "itemRef": "productLifecycleChart" }] },
+          { "columns": [{ "itemRef": "latestOrdersList" }] }
+        ]
+      },
+      "pageItems": [
+        {
+          "key": "supplierTotalSalesCard",
+          "pageItemType": "SupplierTotalSales",
+          "settings": {
+            "parameterKey": "totalSales",
+            "title": "Min försäljning"
+          }
+        },
+        {
+          "key": "productLifecycleChart",
+          "pageItemType": "ProductLifecycle",
+          "settings": {
+            "parameterKey": "productLifecycle",
+            "title": "Produktlivscykel",
+            "chartType": "line"
+          }
+        },
+        {
+          "key": "latestOrdersList",
+          "pageItemType": "LatestOrders",
+          "settings": {
+            "parameterKey": "latestOrders",
+            "title": "Senaste ordrar",
+            "maxItems": 5
+          }
+        }
+      ],
+      "condition": {
+        "operator": "Contains",
+        "leftSource": "Parameter",
+        "leftField": "userRoles",
+        "rightSource": "Const",
+        "rightValue": "Supplier"
+      }
+    },
+
+    {
+      "key": "teamPerformance",
+      "name": [
+        { "language": "sv", "text": "Teamresultat" },
+        { "language": "en", "text": "Team Performance" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          { "columns": [{ "itemRef": "topEmployeesChart" }] },
+          { "columns": [{ "itemRef": "employeeEfficiencyChart" }] },
+          { "columns": [{ "itemRef": "employeeWorkloadChart" }] }
+        ]
+      },
+      "pageItems": [
+        {
+          "key": "topEmployeesChart",
+          "pageItemType": "TopEmployees",
+          "settings": { "title": "Bästa anställda", "chartType": "bar" }
+        },
+        {
+          "key": "employeeEfficiencyChart",
+          "pageItemType": "EmployeeEfficiency",
+          "settings": { "title": "Effektivitet per anställd" }
+        },
+        {
+          "key": "employeeWorkloadChart",
+          "pageItemType": "EmployeeWorkload",
+          "settings": { "title": "Belastning per anställd" }
+        }
+      ],
+      "condition": {
+        "operator": "Contains",
+        "leftSource": "Parameter",
+        "leftField": "userRoles",
+        "rightSource": "Const",
+        "rightValue": "Manager"
+      }
+    },
+
+    {
+      "key": "analysisForecast",
+      "name": [
+        { "language": "sv", "text": "Analys & Prognos" },
+        { "language": "en", "text": "Analysis & Forecast" }
+      ],
+      "enabled": true,
+      "layout": {
+        "type": "vertical",
+        "rows": [
+          { "columns": [{ "itemRef": "discountImpactChart" }] },
+          { "columns": [{ "itemRef": "salesForecastChart" }] },
+          { "columns": [{ "itemRef": "outlierProductsChart" }] }
+        ]
+      },
+      "pageItems": [
+        {
+          "key": "discountImpactChart",
+          "pageItemType": "DiscountImpact",
+          "settings": { "title": "Rabatteffekt", "chartType": "bar" }
+        },
+        {
+          "key": "salesForecastChart",
+          "pageItemType": "SalesForecast",
+          "settings": { "title": "Försäljningsprognos", "chartType": "line" }
+        },
+        {
+          "key": "outlierProductsChart",
+          "pageItemType": "OutlierProducts",
+          "settings": { "title": "Avvikande produkter", "chartType": "bar" }
+        }
+      ],
+      "condition": {
+        "operator": "Contains",
+        "leftSource": "Parameter",
+        "leftField": "userRoles",
+        "rightSource": "Const",
+        "rightValue": "Admin"
+      }
+    }
+  ]
+}

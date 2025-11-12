@@ -37,7 +37,7 @@ export default function Navbar() {
   return (
     <nav className="bg-white border border-gray-200 rounded-lg shadow-sm">
       <div className="max-w-[1100px] mx-auto flex justify-between items-center px-6 py-3">
-        <Link to="/" className="font-semibold text-lg tracking-wide">
+        <Link to="/dashboard" className="font-semibold text-lg tracking-wide">
           Northwind Portal
         </Link>
 
@@ -64,7 +64,7 @@ export default function Navbar() {
                 >
                   Produkter
                 </NavLink>
-                  <NavLink
+                <NavLink
                   to="/orders"
                   className={({ isActive }) =>
                     `block px-4 py-2 hover:bg-gray-100 ${
@@ -106,7 +106,6 @@ export default function Navbar() {
           </div>
 
           {user?.roles.includes("Admin") && (
- 
             <div className="relative" ref={adminRef}>
               <button
                 onClick={() => setOpenAdmin(!openAdmin)}

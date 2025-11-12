@@ -9,24 +9,21 @@ import ProtectedRoute from "../components/auth/ProtectedRoutes";
 import AppLayout from "../components/layout/AppLayout";
 import OrdersPage from "../pages/orders/OrdersPage";
 import DashboardConfigPage from "../pages/admin/DashboardConfigPage";
-import DashboardPage from "../pages/dashboard/DashboardPage";
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
 
 export default function AppRoutes() {
   const { isAuthenticated } = useAuth();
-
-
   return (
     <AppLayout>
       <Routes>
         {/* Login */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Dashboard - kräver inloggning */}
         <Route
-          path="/"
+          path="dashboard/*"
           element={
             <ProtectedRoute roles={["Admin", "Employee", "Supplier"]}>
-              <DashboardPage />
+              <DashboardLayout />
             </ProtectedRoute>
           }
         />
@@ -87,7 +84,7 @@ export default function AppRoutes() {
           path="*"
           element={
             isAuthenticated ? (
-              <Navigate to="/" replace />
+              <Navigate to="dashboard/" replace />
             ) : (
               <Navigate to="/login" replace />
             )

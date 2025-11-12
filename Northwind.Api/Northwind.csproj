@@ -26,7 +26,8 @@
 
 <!--  Kopiera default-dashboard från Client till Api vid build -->
 <Target Name="CopyDashboardJson" AfterTargets="Build">
-	<Copy SourceFiles="..\Northwind.Client\src\structures\defaultDashboard.json" DestinationFolder="Structures\" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="..\Northwind.Client\src\structures\compactDashboard.json" DestinationFolder="Structures\" SkipUnchangedFiles="true" />
+
 </Target>
 
 

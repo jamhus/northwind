@@ -6,7 +6,7 @@ import { notify } from "../../components/common/Notify";
 import ModalWrapper from "../products/modals/ModalWrapper";
 import DashboardRenderer from "../dashboard/DashboardRenderer";
 import SupplierSelect from "../../components/common/SupplierSelect";
-import defaultDashboard from "../../structures/defaultDashboard.json";
+import defaultDashboard from "../../structures/compactDashboard.json";
 import { dashboardConfigService } from "../../api/dashboardConfig.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
