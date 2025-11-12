@@ -2,12 +2,66 @@
   "version": 5,
   "type": "Dashboard",
   "parameters": [
-    {
+     {
       "key": "userRoles",
       "initialization": "Expression",
       "entityType": "User",
       "expression": "DynamicData.getCurrentRoles()",
       "description": "Current user roles as comma-separated string"
+    },
+    {
+      "key": "totalSales",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.TotalSales()"
+    },
+    {
+      "key": "totalOrders",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.TotalOrders()"
+    },
+    {
+      "key": "totalCustomers",
+      "initialization": "Handler",
+      "entityType": "Customer",
+      "expression": "Handler.TotalCustomers()"
+    },
+    {
+      "key": "salesPerMonth",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.SalesPerMonth()"
+    },
+    {
+      "key": "salesPerRegion",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.SalesPerRegion()"
+    },
+    {
+      "key": "topProducts",
+      "initialization": "Handler",
+      "entityType": "Product",
+      "expression": "Handler.TopProducts(5)"
+    },
+    {
+      "key": "topEmployees",
+      "initialization": "Handler",
+      "entityType": "Employee",
+      "expression": "Handler.TopEmployees(6)"
+    },
+    {
+      "key": "topCustomers",
+      "initialization": "Handler",
+      "entityType": "Customer",
+      "expression": "Handler.TopCustomers(5)"
+    },
+    {
+      "key": "latestOrders",
+      "initialization": "Handler",
+      "entityType": "Order",
+      "expression": "Handler.LatestOrders(5)"
     },
     {
       "key": "supplierId",
@@ -127,13 +181,6 @@
             "parameterKey": "salesPerRegion",
             "title": "Försäljning per region",
             "chartType": "pie"
-          },
-          "condition": {
-            "operator": "Contains",
-            "leftSource": "Parameter",
-            "leftField": "userRoles",
-            "rightSource": "Const",
-            "rightValue": "Manager"
           }
         },
         {
@@ -144,25 +191,6 @@
             "title": "Prestation per anställd",
             "chartType": "bar",
             "color": "orange"
-          },
-          "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
           }
         },
         {
@@ -191,7 +219,26 @@
             "title": "Genomsnittlig ordertid (dagar)"
           }
         }
-      ]
+      ],
+        "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
     },
 
     {
@@ -237,13 +284,25 @@
           }
         }
       ],
-      "condition": {
-        "operator": "Contains",
-        "leftSource": "Parameter",
-        "leftField": "userRoles",
-        "rightSource": "Const",
-        "rightValue": "Supplier"
-      }
+        "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Supplier"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
     },
 
     {
@@ -278,13 +337,25 @@
           "settings": { "title": "Belastning per anställd" }
         }
       ],
-      "condition": {
-        "operator": "Contains",
-        "leftSource": "Parameter",
-        "leftField": "userRoles",
-        "rightSource": "Const",
-        "rightValue": "Manager"
-      }
+        "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
     },
 
     {
@@ -319,13 +390,25 @@
           "settings": { "title": "Avvikande produkter", "chartType": "bar" }
         }
       ],
-      "condition": {
-        "operator": "Contains",
-        "leftSource": "Parameter",
-        "leftField": "userRoles",
-        "rightSource": "Const",
-        "rightValue": "Admin"
-      }
+        "condition": {
+            "logic": "Or",
+            "conditions": [
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Manager"
+              },
+              {
+                "operator": "Contains",
+                "leftSource": "Parameter",
+                "leftField": "userRoles",
+                "rightSource": "Const",
+                "rightValue": "Admin"
+              }
+            ]
+          }
     }
   ]
 }

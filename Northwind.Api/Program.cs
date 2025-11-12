@@ -74,6 +74,9 @@ builder.Services.AddScoped<IPageItemHandler, TopProductsHandler>();
 builder.Services.AddScoped<IPageItemHandler, TotalSalesHandler>();
 builder.Services.AddScoped<IPageItemHandler, TotalCustomersHandler>();
 builder.Services.AddScoped<IPageItemHandler, TotalOrdersHandler>();
+builder.Services.AddScoped<IPageItemHandler, SupplierTotalSalesHandler>();
+
+
 
 
 

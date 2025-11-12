@@ -8,6 +8,7 @@ import TopEmployeesChart from "./components/TopEmployeesChart";
 import TotalCustomersCard from "./components/TotalCustomersCard";
 import SalesPerRegionChart from "./components/SalesByRegionChart";
 import TopCustomersCard from "./components/TopCustomersCard";
+import SupplierTotalSalesCard from "./components/SupplierTotalSalesCard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentRegistry: Record<string, any> = {
@@ -20,4 +21,5 @@ export const componentRegistry: Record<string, any> = {
   SalesPerMonth: SalesByMonthChart,
   TotalCustomers: TotalCustomersCard,
   SalesPerRegion: SalesPerRegionChart,
+  SupplierTotalSales: SupplierTotalSalesCard,
 };

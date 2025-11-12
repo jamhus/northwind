@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent } from "../../../components/ui/Card";
 import Table from "../../../components/common/Table";
 import OrderDetailsModal from "../../orders/modals/OrderDetailsModal";
 import type { Order } from "../../../api/order.services";
@@ -47,7 +46,7 @@ export default function LatestOrdersCard({ settings, data }: Props) {
                   o.total.toLocaleString("sv-SE", {
                     minimumFractionDigits: 1,
                     maximumFractionDigits: 1,
-                  }) + " kr",
+                  }) + " $",
               },
             ]}
             onRowClick={(o) =>

@@ -44,7 +44,7 @@ export default function TopCustomersCard({ settings, data }: Props) {
                     `${value.toLocaleString("sv-SE", {
                       minimumFractionDigits: 1,
                       maximumFractionDigits: 1,
-                    })} kr`
+                    })} $`
                   }
                 />
                 <Bar dataKey="value" fill={color} radius={[6, 6, 0, 0]} />
@@ -64,7 +64,7 @@ export default function TopCustomersCard({ settings, data }: Props) {
                     minimumFractionDigits: 1,
                     maximumFractionDigits: 1,
                   })}{" "}
-                  kr
+                  $
                 </span>
               </div>
             ))}

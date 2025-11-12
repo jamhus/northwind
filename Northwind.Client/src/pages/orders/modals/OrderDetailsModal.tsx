@@ -56,7 +56,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose }: Props) {
           {
             key: "unitPrice",
             label: "Pris",
-            render: (d) => `${d.unitPrice.toFixed(2)} kr`,
+            render: (d) => `${d.unitPrice.toFixed(2)} $`,
             width: "100px",
           },
           { key: "quantity", label: "Antal", width: "80px" },
@@ -72,7 +72,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose }: Props) {
       {/* Total i footer */}
       <div className="mt-4 flex justify-end text-sm font-medium text-gray-700">
         <span>Totalt:</span>
-        <span className="ml-2 font-semibold">{totalSum.toFixed(2)} kr</span>
+        <span className="ml-2 font-semibold">{totalSum.toFixed(2)} $</span>
       </div>
 
       {/* Close button i footer */}

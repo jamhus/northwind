@@ -53,7 +53,7 @@ public class DynamicDataService
     }
 
     // 🔹 Supplier ID (om användaren är kopplad till ett företag)
-    public int? GetCurrentSupplierId()
+    public int? GetSupplierId()
     {
         if (!IsAuthenticated)
             return null;

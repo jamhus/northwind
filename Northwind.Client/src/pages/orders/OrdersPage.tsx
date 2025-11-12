@@ -33,7 +33,7 @@ export default function OrdersPage() {
           { key: "customerName", label: "Kund" },
           { key: "employeeName", label: "Anställd" },
           { key: "shipCountry", label: "Land" },
-          { key: "total", label: "Totalt", render: (o) => o.total.toFixed(2) + " kr" },
+          { key: "total", label: "Totalt", render: (o) => o.total.toFixed(2) + " $" },
         ]}
       />
       <Pagination
