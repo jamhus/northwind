@@ -42,15 +42,6 @@ public class GetDashboardConfig : EndpointBaseAsync
         {
             var defaultJson = await System.IO.File.ReadAllTextAsync(path, ct);
 
-            // 🔹 3. Valfritt: spara i databasen direkt (så nästa gång laddas snabbare)
-            _db.DashboardConfigs.Add(new DashboardConfig
-            {
-                CompanyId = companyId,
-                ConfigJson = defaultJson,
-                CreatedAt = DateTime.UtcNow
-            });
-            await _db.SaveChangesAsync(ct);
-
             return Ok(defaultJson);
         }
 

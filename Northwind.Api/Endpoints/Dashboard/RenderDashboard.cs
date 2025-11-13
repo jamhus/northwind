@@ -56,20 +56,10 @@ public class RenderDashboard : EndpointBaseAsync
         // 🔹 2. Om inget hittas, försök ladda compactDefinition.json
         if (config is null)
         {
-            var path = Path.Combine(_env.ContentRootPath, "Structures", "compactDefinition.json");
+            var path = Path.Combine(_env.ContentRootPath, "Structures", "compactDashboard.json");
             if (System.IO.File.Exists(path))
             {
                 config = await System.IO.File.ReadAllTextAsync(path, ct);
-
-                _db.DashboardConfigs.Add(new DashboardConfig
-                {
-                    Key = "default",
-                    CompanyId = supplierId != null ? int.Parse(supplierId) : null,
-                    ConfigJson = config,
-                    CreatedAt = DateTime.UtcNow
-                });
-
-                await _db.SaveChangesAsync(ct);
             }
 
         }

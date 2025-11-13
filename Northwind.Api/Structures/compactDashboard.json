@@ -525,7 +525,7 @@
           }
         },
         {
-          "key": "DiscountByCategoryCard",
+          "key": "discountByCategoryChart",
           "pageItemType": "DiscountByCategory",
           "settings": {
             "title": "Genomsnittlig kategoriförsäljning per rabattnivå",

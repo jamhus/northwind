@@ -4,7 +4,7 @@ import {
 import { Card, CardContent } from "../../../components/ui/Card";
 
 type DiscountCategoryData = {
-  avgDiscount: string;
+  discount: string;
   category: string;
   totalSales: number;
 };
@@ -15,7 +15,7 @@ type Props = {
 };
 
 type DiscountGroup = {
-  avgDiscount: string;
+  discount: string;
   [key: string]: string | number;
 };
 
@@ -32,10 +32,10 @@ export default function DiscountByCategoryCard({ settings, data }: Props) {
   const grouped: DiscountGroup[] = Object.values(
     data.reduce<Record<string, DiscountGroup>>((acc, curr) => {
       const safeKey = toSafeKey(curr.category);
-      if (!acc[curr.avgDiscount]) {
-        acc[curr.avgDiscount] = { avgDiscount: curr.avgDiscount };
+      if (!acc[curr.discount]) {
+        acc[curr.discount] = { discount: curr.discount };
       }
-      acc[curr.avgDiscount][safeKey] = curr.totalSales;
+      acc[curr.discount][safeKey] = curr.totalSales;
       return acc;
     }, {})
   );
@@ -53,7 +53,7 @@ export default function DiscountByCategoryCard({ settings, data }: Props) {
         <ResponsiveContainer width="100%" height={380}>
           <BarChart data={grouped}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="avgDiscount" />
+            <XAxis dataKey="discount" />
             <YAxis />
             <Tooltip
               formatter={(v: number) => `$${v.toLocaleString()}`}
