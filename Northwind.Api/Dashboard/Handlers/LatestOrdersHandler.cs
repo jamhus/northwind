@@ -20,7 +20,7 @@ public class LatestOrdersHandler : BaseHandler
     public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct)
     {
         var user = _http.HttpContext?.User;
-        var top = GetTopArg(settings, 5);
+        var top = GetTakeValue(settings, 5);
 
         if (user == null || !user.Identity?.IsAuthenticated == true)
             return Array.Empty<object>();

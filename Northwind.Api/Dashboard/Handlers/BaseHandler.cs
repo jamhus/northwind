@@ -12,13 +12,10 @@ public abstract class BaseHandler : IPageItemHandler
 
     public abstract string Type { get; }
 
-    public virtual Task<object?> ExecuteParameterAsync(Dictionary<string, object> args, ParameterStore store, CancellationToken ct)
-        => ExecuteItemAsync(args, store, ct); // default: samma logik
-
     public abstract Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore store, CancellationToken ct);
 
-    protected int GetTopArg(Dictionary<string, object> dict, int defaultValue = 5)
-        => dict.TryGetValue("top", out var v) && int.TryParse(Convert.ToString(v), out var n) ? n : defaultValue;
+    protected int GetTakeValue(Dictionary<string, object> dict, int defaultValue = 5)
+        => dict.TryGetValue("take", out var v) && int.TryParse(Convert.ToString(v), out var n) ? n : defaultValue;
 
     // 🔹 Filtrering efter roll/supplier/employee
     protected IQueryable<Order> FilterOrders(IQueryable<Order> query, ParameterStore ps)

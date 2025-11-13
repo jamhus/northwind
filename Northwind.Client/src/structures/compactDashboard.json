@@ -10,60 +10,6 @@
       "description": "Current user roles as comma-separated string"
     },
     {
-      "key": "totalSales",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.TotalSales()"
-    },
-    {
-      "key": "totalOrders",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.TotalOrders()"
-    },
-    {
-      "key": "totalCustomers",
-      "initialization": "Handler",
-      "entityType": "Customer",
-      "expression": "Handler.TotalCustomers()"
-    },
-    {
-      "key": "salesPerMonth",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.SalesPerMonth()"
-    },
-    {
-      "key": "salesPerRegion",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.SalesPerRegion()"
-    },
-    {
-      "key": "topProducts",
-      "initialization": "Handler",
-      "entityType": "Product",
-      "expression": "Handler.TopProducts(5)"
-    },
-    {
-      "key": "topEmployees",
-      "initialization": "Handler",
-      "entityType": "Employee",
-      "expression": "Handler.TopEmployees(6)"
-    },
-    {
-      "key": "topCustomers",
-      "initialization": "Handler",
-      "entityType": "Customer",
-      "expression": "Handler.TopCustomers(5)"
-    },
-    {
-      "key": "latestOrders",
-      "initialization": "Handler",
-      "entityType": "Order",
-      "expression": "Handler.LatestOrders(5)"
-    },
-    {
       "key": "supplierId",
       "initialization": "Expression",
       "entityType": "User",
@@ -141,7 +87,8 @@
             "parameterKey": "topProducts",
             "title": "Topp 5 produkter",
             "chartType": "bar",
-            "color": "green"
+            "color": "green",
+            "take": 5
           }
         },
         {
@@ -150,7 +97,7 @@
           "settings": {
             "parameterKey": "latestOrders",
             "title": "Senaste ordrar",
-            "maxItems": 5
+            "take": 5
           }
         }
       ]
@@ -190,7 +137,8 @@
             "parameterKey": "topEmployees",
             "title": "Prestation per anställd",
             "chartType": "bar",
-            "color": "orange"
+            "color": "orange",
+            "take": 6
           }
         },
         {
@@ -200,7 +148,8 @@
             "parameterKey": "topCustomers",
             "title": "Top Customers",
             "chartType": "bar",
-            "color": "teal"
+            "color": "teal",
+            "take": 5
           }
         },
         {

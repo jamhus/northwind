@@ -26,7 +26,7 @@ public class TopCustomersHandler : BaseHandler
         var supplierId = user?.FindFirstValue("SupplierId");
         var employeeId = user?.FindFirstValue("EmployeeId");
 
-        var top = GetTopArg(settings, 5);
+        var top = GetTakeValue(settings, 5);
 
         var query = Db.OrderDetails
             .Include(d => d.Order)

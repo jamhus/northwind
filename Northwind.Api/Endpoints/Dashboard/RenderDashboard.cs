@@ -39,7 +39,6 @@ public class RenderDashboard : EndpointBaseAsync
 
         IQueryable<DashboardConfig> query = _db.DashboardConfigs.AsNoTracking();
 
-        // 🔹 1. Välj config beroende på roll/supplier
         if (string.Equals(role, "Supplier", StringComparison.OrdinalIgnoreCase) && supplierId != null)
         {
             query = query.Where(c => c.CompanyId == int.Parse(supplierId));
@@ -49,24 +48,24 @@ public class RenderDashboard : EndpointBaseAsync
             query = query.Where(c => c.Key == "default");
         }
 
-        var cfg = await query
+        var config = await query
             .OrderByDescending(c => c.UpdatedAt ?? c.CreatedAt)
             .Select(c => c.ConfigJson)
             .FirstOrDefaultAsync(ct);
 
-        // 🔹 2. Om inget hittas, försök ladda defaultDashboard.json
-        if (cfg is null)
+        // 🔹 2. Om inget hittas, försök ladda compactDefinition.json
+        if (config is null)
         {
             var path = Path.Combine(_env.ContentRootPath, "Structures", "compactDefinition.json");
             if (System.IO.File.Exists(path))
             {
-                cfg = await System.IO.File.ReadAllTextAsync(path, ct);
+                config = await System.IO.File.ReadAllTextAsync(path, ct);
 
                 _db.DashboardConfigs.Add(new DashboardConfig
                 {
                     Key = "default",
                     CompanyId = supplierId != null ? int.Parse(supplierId) : null,
-                    ConfigJson = cfg,
+                    ConfigJson = config,
                     CreatedAt = DateTime.UtcNow
                 });
 
@@ -76,7 +75,7 @@ public class RenderDashboard : EndpointBaseAsync
         }
 
         // 🔹 3. Rendera dashboard med vald konfiguration
-        var result = await _runtime.RenderAsync(cfg, user, ct);
+        var result = await _runtime.RenderAsync(config, user, ct);
         return Ok(result);
     }
 }

@@ -35,50 +35,13 @@ public class ParameterEvaluator
                     }
 
 
-                case ParameterInitialization.Handler:
-                    // Format: "Handler.TopProducts(5)" eller "Handler.TotalSales()"
-                    if (TryParseHandlerCall(p.Expression, out var type, out var args))
-                    {
-                        var handler = _handlers.FirstOrDefault(h =>
-                            h.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
-                        if (handler != null)
-                        {
-                            var result = await handler.ExecuteParameterAsync(args, store, ct);
-                            store.Set(p.Key, result);
-                        }
-                        else store.Set(p.Key, null);
-                    }
-                    else store.Set(p.Key, null);
-                    break;
+                default: break;
             }
         }
 
         return store;
     }
 
-    static bool TryParseHandlerCall(string? expr, out string type, out Dictionary<string, object> args)
-    {
-        type = "";
-        args = new();
-
-        if (string.IsNullOrWhiteSpace(expr) || !expr.StartsWith("Handler.", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        // Ex: "Handler.TopProducts(5)" -> type=TopProducts, args={ top: 5 }
-        var m = Regex.Match(expr, @"Handler\.(?<type>\w+)\((?<arg>[^)]*)\)");
-        if (!m.Success) return false;
-
-        type = m.Groups["type"].Value;
-        var arg = m.Groups["arg"].Value.Trim();
-
-        if (string.IsNullOrEmpty(arg)) return true;
-
-        // enkel tolkning: ett heltal tolkas som { top: <int> }
-        if (int.TryParse(arg, out var n)) args["top"] = n;
-        // (utöka här om du vill stödja "key:value, key:value" etc.)
-
-        return true;
-    }
 
     private async Task<object?> EvaluateDynamicExpressionAsync(string? expression)
     {

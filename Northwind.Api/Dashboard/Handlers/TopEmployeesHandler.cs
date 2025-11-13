@@ -12,7 +12,7 @@ public class TopEmployeesHandler : BaseHandler
 
     public override async Task<object?> ExecuteItemAsync(Dictionary<string, object> settings, ParameterStore ps, CancellationToken ct)
     {
-        var top = GetTopArg(settings, 6);
+        var top = GetTakeValue(settings, 6);
 
         var query = FilterOrders(
             Db.Orders

@@ -16,13 +16,13 @@ public class SupplierTotalSalesHandler : BaseHandler
         ParameterStore store,
         CancellationToken ct)
     {
-        // 🧠 Hämta roller från ParameterStore (kommer från DynamicData.getCurrentRoles)
+        // Hämta roller från ParameterStore (kommer från DynamicData.getCurrentRoles)
         var rolesValue = store.Get("userRoles")?.ToString() ?? string.Empty;
         var roles = rolesValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                               .Select(r => r.ToLowerInvariant())
                               .ToHashSet();
 
-        // 🧠 Hämta supplierId (om finns)
+        // Hämta supplierId (om finns)
         int.TryParse(store.Get("supplierId")?.ToString(), out var supplierId);
         bool isSupplier = supplierId > 0 && roles.Contains("supplier");
 
