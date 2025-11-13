@@ -47,7 +47,17 @@ export default function ModalWrapper({
             transition={{ duration: 0.15, ease: "easeOut" }}
             className={`bg-white rounded-xl p-6 ${width} shadow-xl relative z-50 ${className}`}
           >
-            {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+            {title && (
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">{title}</h2>
+                <button
+                  onClick={onClose}
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            )}{" "}
             {children}
           </motion.div>
         </Modal>

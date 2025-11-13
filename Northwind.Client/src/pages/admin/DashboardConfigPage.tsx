@@ -4,11 +4,11 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github";
 import { notify } from "../../components/common/Notify";
 import ModalWrapper from "../products/modals/ModalWrapper";
-import DashboardRenderer from "../dashboard/DashboardRenderer";
 import SupplierSelect from "../../components/common/SupplierSelect";
 import defaultDashboard from "../../structures/compactDashboard.json";
 import { dashboardConfigService } from "../../api/dashboardConfig.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import DashboardPreviewPortal from "../dashboard/DashboardPreviewPortal";
 
 export default function DashboardConfigPage() {
   const [jsonValue, setJsonValue] = useState("{}");
@@ -68,15 +68,15 @@ export default function DashboardConfigPage() {
   };
 
   const handlePreview = async () => {
-  try {
-    const parsed = JSON.parse(jsonValue);
-    const rendered = await dashboardConfigService.preview(parsed);
-    setPreviewData(rendered);
-    setPreviewOpen(true);
-  } catch {
-    notify("Kunde inte rendera förhandsgranskning", "error");
-  }
-};
+    try {
+      const parsed = JSON.parse(jsonValue);
+      const rendered = await dashboardConfigService.preview(parsed);
+      setPreviewData(rendered);
+      setPreviewOpen(true);
+    } catch {
+      notify("Kunde inte rendera förhandsgranskning", "error");
+    }
+  };
 
   const handleFetch = async () => {
     try {
@@ -162,15 +162,18 @@ export default function DashboardConfigPage() {
       )}
 
       {/* Förhandsgranskning */}
-      {previewOpen && (
+
+      {previewOpen && previewData && (
         <ModalWrapper
           isOpen={previewOpen}
           onClose={() => setPreviewOpen(false)}
-          title="Förhandsgranskning"
+          title=""
+          width="w-[95%]"
         >
-          <div className="h-[80vh] overflow-auto bg-gray-50 rounded p-4">
-            <DashboardRenderer definition={previewData!} />
-          </div>
+          <DashboardPreviewPortal
+            definition={previewData}
+            onClose={() => setPreviewOpen(false)}
+          />
         </ModalWrapper>
       )}
     </div>

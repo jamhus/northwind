@@ -9,6 +9,8 @@ import TotalCustomersCard from "./components/TotalCustomersCard";
 import SalesPerRegionChart from "./components/SalesByRegionChart";
 import TopCustomersCard from "./components/TopCustomersCard";
 import SupplierTotalSalesCard from "./components/SupplierTotalSalesCard";
+import AvgOrderProcessingTimeCard from "./components/AvgOrderProcessingTimeCard";
+import ProductLifecycleChart from "./components/ProductLifecycleChart";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentRegistry: Record<string, any> = {
@@ -22,4 +24,6 @@ export const componentRegistry: Record<string, any> = {
   TotalCustomers: TotalCustomersCard,
   SalesPerRegion: SalesPerRegionChart,
   SupplierTotalSales: SupplierTotalSalesCard,
+  AvgOrderProcessingTime: AvgOrderProcessingTimeCard,
+  ProductLifecycle: ProductLifecycleChart,
 };

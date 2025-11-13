@@ -75,10 +75,8 @@ builder.Services.AddScoped<IPageItemHandler, TotalSalesHandler>();
 builder.Services.AddScoped<IPageItemHandler, TotalCustomersHandler>();
 builder.Services.AddScoped<IPageItemHandler, TotalOrdersHandler>();
 builder.Services.AddScoped<IPageItemHandler, SupplierTotalSalesHandler>();
-
-
-
-
+builder.Services.AddScoped<IPageItemHandler, AvgOrderProcessingTimeHandler>();
+builder.Services.AddScoped<IPageItemHandler, ProductLifecycleHandler>();
 
 
 builder.Services.AddOpenApi();

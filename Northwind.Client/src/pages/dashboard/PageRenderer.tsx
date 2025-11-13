@@ -7,9 +7,9 @@ export default function PageRenderer({ page }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {page.layout?.rows?.map((row, i) => (
-        <div key={i} className="flex gap-4">
+        <div key={i} className="flex gap-4" style={row.style}>
           {row.columns.map((col, j) => (
-            <div key={j} className="flex-1">
+            <div key={j} className="flex-1" style={col.style}>
               <ItemRenderer itemRef={col.itemRef} items={page.pageItems} />
             </div>
           ))}

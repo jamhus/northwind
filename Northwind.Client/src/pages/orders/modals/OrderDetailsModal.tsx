@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../../components/common/Loader";
 import Table from "../../../components/common/Table";
-import { X } from "lucide-react";
 import { orderService } from "../../../api/order.services";
 import ModalWrapper from "../../products/modals/ModalWrapper";
 
@@ -73,16 +72,6 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose }: Props) {
       <div className="mt-4 flex justify-end text-sm font-medium text-gray-700">
         <span>Totalt:</span>
         <span className="ml-2 font-semibold">{totalSum.toFixed(2)} $</span>
-      </div>
-
-      {/* Close button i footer */}
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
-        >
-          Stäng
-        </button>
       </div>
     </ModalWrapper>
   );

@@ -113,11 +113,11 @@
       "layout": {
         "type": "vertical",
         "rows": [
+          { "columns": [{ "itemRef": "avgOrderProcessingTimeCard"}],"style": { "width": "50%" }},
           { "columns": [{ "itemRef": "salesPerRegionChart" }] },
           { "columns": [{ "itemRef": "topEmployeesChart" }] },
           { "columns": [{ "itemRef": "topCustomersChart" }] },
-          { "columns": [{ "itemRef": "supplierTotalSalesChart" }] },
-          { "columns": [{ "itemRef": "avgOrderProcessingTimeCard" }] }
+          { "columns": [{ "itemRef": "supplierTotalSalesChart" }] }
         ]
       },
       "pageItems": [
@@ -220,7 +220,8 @@
           "settings": {
             "parameterKey": "productLifecycle",
             "title": "Produktlivscykel",
-            "chartType": "line"
+            "chartType": "line",
+            "take": 20
           }
         },
         {

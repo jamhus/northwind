@@ -36,8 +36,8 @@ public class GetDashboardConfig : EndpointBaseAsync
         if (config != null)
             return Ok(config.ConfigJson);
 
-        // 🔹 2. Fanns inget – ladda defaultDashboard.json från filsystemet
-        var path = Path.Combine(_env.ContentRootPath, "Structures", "defaultDashboard.json");
+        // 🔹 2. Fanns inget – ladda compactDashboard.json från filsystemet
+        var path = Path.Combine(_env.ContentRootPath, "Structures", "compactDashboard.json");
 
         if (System.IO.File.Exists(path))
         {

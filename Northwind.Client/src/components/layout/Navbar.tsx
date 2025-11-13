@@ -116,7 +116,7 @@ export default function Navbar() {
               </button>
 
               {openAdmin && (
-                <div className="absolute right-0 mt-2 bg-white text-gray-700 rounded shadow-lg w-52 z-50">
+                <div className="absolute right-0 mt-2 bg-white text-gray-700 rounded shadow-lg w-60 z-50">
                   <NavLink
                     to="/admin/add-user"
                     className={({ isActive }) =>
