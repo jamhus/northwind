@@ -13,8 +13,7 @@ export default function SalesPerRegionChart({ settings, data = [] }: Props) {
     <Card>
       <CardContent className="p-6">
         <h2 className="text-lg font-semibold mb-4">{settings.title}</h2>
-        <ResponsiveContainer width="100%" height={250}>
-          <ResponsiveContainer width="100%" height={450}>
+          <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie
                 dataKey="totalSales"
@@ -31,7 +30,6 @@ export default function SalesPerRegionChart({ settings, data = [] }: Props) {
               <Tooltip formatter={(v: number) => `${v.toLocaleString()} ${settings.suffix}`} />
             </PieChart>
           </ResponsiveContainer>
-        </ResponsiveContainer>
       </CardContent>
     </Card>
   );

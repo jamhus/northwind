@@ -77,6 +77,13 @@ builder.Services.AddScoped<IPageItemHandler, TotalOrdersHandler>();
 builder.Services.AddScoped<IPageItemHandler, SupplierTotalSalesHandler>();
 builder.Services.AddScoped<IPageItemHandler, AvgOrderProcessingTimeHandler>();
 builder.Services.AddScoped<IPageItemHandler, ProductLifecycleHandler>();
+builder.Services.AddScoped<IPageItemHandler, EmployeeEfficiencyHandler>();
+builder.Services.AddScoped<IPageItemHandler, SalesForecastHandler>();
+builder.Services.AddScoped<IPageItemHandler, OutlierProductsHandler>();
+builder.Services.AddScoped<IPageItemHandler, DiscountImpactHandler>();
+builder.Services.AddScoped<IPageItemHandler, EmployeeWorkloadHandler>();
+
+
 
 
 builder.Services.AddOpenApi();

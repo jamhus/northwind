@@ -11,6 +11,12 @@ import TopCustomersCard from "./components/TopCustomersCard";
 import SupplierTotalSalesCard from "./components/SupplierTotalSalesCard";
 import AvgOrderProcessingTimeCard from "./components/AvgOrderProcessingTimeCard";
 import ProductLifecycleChart from "./components/ProductLifecycleChart";
+import EmployeeEfficiencyCard from "./components/EmployeeEfficencyCard";
+import EmployeeWorkloadChart from "./components/EmployeeWorkloadChart";
+import OutlierProductsChart from "./components/OutlierProductsChart";
+import SalesForecastChart from "./components/SalesForecastCard";
+import { Disc } from "lucide-react";
+import DiscountImpactChart from "./components/DiscountImpactChart";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentRegistry: Record<string, any> = {
@@ -23,7 +29,12 @@ export const componentRegistry: Record<string, any> = {
   SalesPerMonth: SalesByMonthChart,
   TotalCustomers: TotalCustomersCard,
   SalesPerRegion: SalesPerRegionChart,
+  ProductLifecycle: ProductLifecycleChart,
+  EmployeeEfficiency: EmployeeEfficiencyCard,
   SupplierTotalSales: SupplierTotalSalesCard,
   AvgOrderProcessingTime: AvgOrderProcessingTimeCard,
-  ProductLifecycle: ProductLifecycleChart,
+  SalesForecast: SalesForecastChart,
+  EmployeeWorkload: EmployeeWorkloadChart,
+  OutlierProducts: OutlierProductsChart,
+  DiscountImpact: DiscountImpactChart,
 };

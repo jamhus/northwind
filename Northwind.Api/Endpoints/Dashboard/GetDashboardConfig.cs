@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Northwind.Endpoints.Products;
 using Northwind.Models;
 using Northwind.Models.Data;
 

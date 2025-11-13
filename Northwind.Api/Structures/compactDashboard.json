@@ -2,7 +2,7 @@
   "version": 5,
   "type": "Dashboard",
   "parameters": [
-     {
+    {
       "key": "userRoles",
       "initialization": "Expression",
       "entityType": "User",
@@ -15,14 +15,34 @@
       "entityType": "User",
       "expression": "DynamicData.getSupplierId()",
       "description": "Supplier ID for logged-in user (if any)"
+    },
+    {
+      "key": "companyId",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.GetCurrentCompanyId()",
+      "description": "Company ID for logged-in user (if any)"
+    },
+    {
+      "key": "employeeId",
+      "initialization": "Expression",
+      "entityType": "User",
+      "expression": "DynamicData.GetCurrentEmployeeId()",
+      "description": "Employee ID for logged-in user (if any)"
     }
   ],
   "pages": [
     {
       "key": "mainDashboard",
       "name": [
-        { "language": "sv", "text": "Startsida" },
-        { "language": "en", "text": "Main Dashboard" }
+        {
+          "language": "sv",
+          "text": "Startsida"
+        },
+        {
+          "language": "en",
+          "text": "Main Dashboard"
+        }
       ],
       "enabled": true,
       "layout": {
@@ -30,14 +50,38 @@
         "rows": [
           {
             "columns": [
-              { "itemRef": "totalSalesCard" },
-              { "itemRef": "totalOrdersCard" },
-              { "itemRef": "totalCustomersCard" }
+              {
+                "itemRef": "totalSalesCard"
+              },
+              {
+                "itemRef": "totalOrdersCard"
+              },
+              {
+                "itemRef": "totalCustomersCard"
+              }
             ]
           },
-          { "columns": [{ "itemRef": "salesPerMonthChart" }] },
-          { "columns": [{ "itemRef": "topProductsChart" }] },
-          { "columns": [{ "itemRef": "latestOrdersList" }] }
+          {
+            "columns": [
+              {
+                "itemRef": "salesPerMonthChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "topProductsChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "latestOrdersList"
+              }
+            ]
+          }
         ]
       },
       "pageItems": [
@@ -102,22 +146,60 @@
         }
       ]
     },
-
     {
       "key": "managementDashboard",
       "name": [
-        { "language": "sv", "text": "Ledning" },
-        { "language": "en", "text": "Management" }
+        {
+          "language": "sv",
+          "text": "Ledning"
+        },
+        {
+          "language": "en",
+          "text": "Management"
+        }
       ],
       "enabled": true,
       "layout": {
         "type": "vertical",
         "rows": [
-          { "columns": [{ "itemRef": "avgOrderProcessingTimeCard"}],"style": { "width": "50%" }},
-          { "columns": [{ "itemRef": "salesPerRegionChart" }] },
-          { "columns": [{ "itemRef": "topEmployeesChart" }] },
-          { "columns": [{ "itemRef": "topCustomersChart" }] },
-          { "columns": [{ "itemRef": "supplierTotalSalesChart" }] }
+          {
+            "columns": [
+              {
+                "itemRef": "avgOrderProcessingTimeCard"
+              }
+            ],
+            "style": {
+              "width": "50%"
+            }
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "salesPerRegionChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "topEmployeesChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "topCustomersChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "supplierTotalSalesChart"
+              }
+            ]
+          }
         ]
       },
       "pageItems": [
@@ -169,40 +251,63 @@
           }
         }
       ],
-        "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
+      "condition": {
+        "logic": "Or",
+        "conditions": [
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Manager"
+          },
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Admin"
           }
+        ]
+      }
     },
-
     {
       "key": "supplierDashboard",
       "name": [
-        { "language": "sv", "text": "Leverantör" },
-        { "language": "en", "text": "Supplier" }
+        {
+          "language": "sv",
+          "text": "Leverantör"
+        },
+        {
+          "language": "en",
+          "text": "Supplier"
+        }
       ],
       "enabled": true,
       "layout": {
         "type": "vertical",
         "rows": [
-          { "columns": [{ "itemRef": "supplierTotalSalesCard" }] },
-          { "columns": [{ "itemRef": "productLifecycleChart" }] },
-          { "columns": [{ "itemRef": "latestOrdersList" }] }
+          {
+            "columns": [
+              {
+                "itemRef": "supplierTotalSalesCard"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "productLifecycleChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "latestOrdersList"
+              }
+            ]
+          }
         ]
       },
       "pageItems": [
@@ -234,60 +339,74 @@
           }
         }
       ],
-        "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Supplier"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
+      "condition": {
+        "logic": "Or",
+        "conditions": [
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Supplier"
+          },
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Admin"
           }
+        ]
+      }
     },
-
     {
       "key": "teamPerformance",
       "name": [
-        { "language": "sv", "text": "Teamresultat" },
-        { "language": "en", "text": "Team Performance" }
+        {
+          "language": "sv",
+          "text": "Teamresultat"
+        },
+        {
+          "language": "en",
+          "text": "Team Performance"
+        }
       ],
       "enabled": true,
       "layout": {
         "type": "vertical",
         "rows": [
-          { "columns": [{ "itemRef": "topEmployeesChart" }] },
-          { "columns": [{ "itemRef": "employeeEfficiencyChart" }] },
-          { "columns": [{ "itemRef": "employeeWorkloadChart" }] }
+          {
+            "columns": [
+              {
+                "itemRef": "topEmployeesChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "employeeEfficiencyChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "employeeWorkloadChart"
+              }
+            ]
+          }
         ]
       },
       "pageItems": [
         {
           "key": "topEmployeesChart",
           "pageItemType": "TopEmployees",
-          "settings": { "title": "Bästa anställda", "chartType": "bar" }
-        },
-        {
-          "key": "employeeEfficiencyChart",
-          "pageItemType": "EmployeeEfficiency",
-          "settings": { "title": "Effektivitet per anställd" }
-        },
-        {
-          "key": "employeeWorkloadChart",
-          "pageItemType": "EmployeeWorkload",
-          "settings": { "title": "Belastning per anställd" }
-        }
-      ],
-        "condition": {
+          "settings": {
+            "title": "Bästa anställda",
+            "chartType": "bar"
+          },
+          "condition": {
             "logic": "Or",
             "conditions": [
               {
@@ -306,59 +425,119 @@
               }
             ]
           }
+        },
+        {
+          "key": "employeeEfficiencyChart",
+          "pageItemType": "EmployeeEfficiency",
+          "settings": {
+            "title": "Effektivitet per anställd"
+          }
+        },
+        {
+          "key": "employeeWorkloadChart",
+          "pageItemType": "EmployeeWorkload",
+          "settings": {
+            "title": "Belastning per anställd"
+          }
+        }
+      ],
+      "condition": {
+        "logic": "Or",
+        "conditions": [
+          {
+            "operator": "Nin",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Supplier"
+          }
+        ]
+      }
     },
-
     {
       "key": "analysisForecast",
       "name": [
-        { "language": "sv", "text": "Analys & Prognos" },
-        { "language": "en", "text": "Analysis & Forecast" }
+        {
+          "language": "sv",
+          "text": "Analys & Prognos"
+        },
+        {
+          "language": "en",
+          "text": "Analysis & Forecast"
+        }
       ],
       "enabled": true,
       "layout": {
         "type": "vertical",
         "rows": [
-          { "columns": [{ "itemRef": "discountImpactChart" }] },
-          { "columns": [{ "itemRef": "salesForecastChart" }] },
-          { "columns": [{ "itemRef": "outlierProductsChart" }] }
+          {
+            "columns": [
+              {
+                "itemRef": "discountImpactChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "salesForecastChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "outlierProductsChart"
+              }
+            ]
+          }
         ]
       },
       "pageItems": [
         {
           "key": "discountImpactChart",
           "pageItemType": "DiscountImpact",
-          "settings": { "title": "Rabatteffekt", "chartType": "bar" }
+          "settings": {
+            "title": "Rabatteffekt",
+            "chartType": "bar"
+          }
         },
         {
           "key": "salesForecastChart",
           "pageItemType": "SalesForecast",
-          "settings": { "title": "Försäljningsprognos", "chartType": "line" }
+          "settings": {
+            "title": "Försäljningsprognos",
+            "chartType": "line"
+          }
         },
         {
           "key": "outlierProductsChart",
           "pageItemType": "OutlierProducts",
-          "settings": { "title": "Avvikande produkter", "chartType": "bar" }
+          "settings": {
+            "title": "Avvikande produkter",
+            "chartType": "bar"
+          }
         }
       ],
-        "condition": {
-            "logic": "Or",
-            "conditions": [
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Manager"
-              },
-              {
-                "operator": "Contains",
-                "leftSource": "Parameter",
-                "leftField": "userRoles",
-                "rightSource": "Const",
-                "rightValue": "Admin"
-              }
-            ]
+      "condition": {
+        "logic": "Or",
+        "conditions": [
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Manager"
+          },
+          {
+            "operator": "Contains",
+            "leftSource": "Parameter",
+            "leftField": "userRoles",
+            "rightSource": "Const",
+            "rightValue": "Admin"
           }
+        ]
+      }
     }
   ]
 }
