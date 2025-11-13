@@ -480,6 +480,20 @@
           {
             "columns": [
               {
+                "itemRef": "discountEfficiencyChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "itemRef": "discountByCategoryChart"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
                 "itemRef": "salesForecastChart"
               }
             ]
@@ -499,6 +513,22 @@
           "pageItemType": "DiscountImpact",
           "settings": {
             "title": "Rabatteffekt",
+            "chartType": "bar"
+          }
+        },
+        {
+          "key": "discountEfficiencyChart",
+          "pageItemType": "DiscountEfficiency",
+          "settings": {
+            "title": "Genomsnittlig orderintäkt per rabattnivå",
+            "chartType": "bar"
+          }
+        },
+        {
+          "key": "DiscountByCategoryCard",
+          "pageItemType": "DiscountByCategory",
+          "settings": {
+            "title": "Genomsnittlig kategoriförsäljning per rabattnivå",
             "chartType": "bar"
           }
         },

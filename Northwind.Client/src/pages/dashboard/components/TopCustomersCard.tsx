@@ -15,7 +15,7 @@ export default function TopCustomersCard({ settings, data }: Props) {
 
   return (
     <Card className="h-full">
-      <CardContent className="p-6">
+            <CardContent className="p-4">
         <h2 className="text-lg font-semibold mb-4">{settings.title}</h2>
 
         {!data?.length ? (

@@ -19,10 +19,10 @@ export default function DiscountImpactChart({ data }: Props) {
   return (
     <Card>
       <CardContent className="p-4">
-        <h3 className="text-lg font-semibold mb-3">
+        <h3 className="text-lg font-semibold mb-4">
           Rabatteffekt på försäljning
         </h3>
-        <ResponsiveContainer width="100%"  height={400}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="discount" tickFormatter={(v) => `${v}%`} />

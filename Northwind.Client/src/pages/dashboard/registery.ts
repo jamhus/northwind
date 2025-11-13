@@ -15,8 +15,9 @@ import EmployeeEfficiencyCard from "./components/EmployeeEfficencyCard";
 import EmployeeWorkloadChart from "./components/EmployeeWorkloadChart";
 import OutlierProductsChart from "./components/OutlierProductsChart";
 import SalesForecastChart from "./components/SalesForecastCard";
-import { Disc } from "lucide-react";
 import DiscountImpactChart from "./components/DiscountImpactChart";
+import DiscountEfficiencyCard from "./components/DiscountEfficiencyCard";
+import DiscountByCategoryChart from "./components/DiscountByCategoryCard";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentRegistry: Record<string, any> = {
@@ -37,4 +38,6 @@ export const componentRegistry: Record<string, any> = {
   EmployeeWorkload: EmployeeWorkloadChart,
   OutlierProducts: OutlierProductsChart,
   DiscountImpact: DiscountImpactChart,
+  DiscountEfficiency: DiscountEfficiencyCard,
+  DiscountByCategory: DiscountByCategoryChart,
 };

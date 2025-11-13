@@ -82,6 +82,8 @@ builder.Services.AddScoped<IPageItemHandler, SalesForecastHandler>();
 builder.Services.AddScoped<IPageItemHandler, OutlierProductsHandler>();
 builder.Services.AddScoped<IPageItemHandler, DiscountImpactHandler>();
 builder.Services.AddScoped<IPageItemHandler, EmployeeWorkloadHandler>();
+builder.Services.AddScoped<IPageItemHandler, DiscountEfficiencyHandler>();
+builder.Services.AddScoped<IPageItemHandler, DiscountByCategoryHandler>();
 
 
 

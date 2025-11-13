@@ -19,14 +19,14 @@ export default function SalesForecastChart({ data }: Props) {
   return (
     <Card>
       <CardContent className="p-4">
-        <h3 className="text-lg font-semibold mb-3">Försäljningsprognos</h3>
+        <h3 className="text-lg font-semibold mb-4">Försäljningsprognos</h3>
         <ResponsiveContainer width="100%"  height={400}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="label" />
-            <YAxis tickFormatter={(v) => `${v.toLocaleString()} kr`} />
+            <YAxis tickFormatter={(v) => `${v.toLocaleString()}$`} />
             <Tooltip
-              formatter={(v: number) => `${v.toLocaleString()} kr`}
+              formatter={(v: number) => `${v.toLocaleString()}$`}
               labelFormatter={(v) => `Månad: ${v}`}
             />
             <Line

@@ -11,7 +11,7 @@ const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#6366f1"];
 export default function SalesPerRegionChart({ settings, data = [] }: Props) {
   return (
     <Card>
-      <CardContent className="p-6">
+            <CardContent className="p-4">
         <h2 className="text-lg font-semibold mb-4">{settings.title}</h2>
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>

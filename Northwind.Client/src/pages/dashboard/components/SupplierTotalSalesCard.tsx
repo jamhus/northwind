@@ -26,7 +26,7 @@ export default function SupplierTotalSalesCard({ settings, data }: Props) {
         {
           key: "totalSales",
           label: "Total försäljning",
-          render: (s) => s.totalSales.toLocaleString() + " kr",
+          render: (s) => s.totalSales.toLocaleString() + "$",
         },
       ]}
     ></Table>

@@ -10,7 +10,7 @@ export default function EmployeeWorkloadChart({ data }: { data: EmployeeWorkload
   return (
     <Card>
       <CardContent className="p-4">
-        <h3 className="text-lg font-semibold mb-3">Belastning per anställd</h3>
+        <h3 className="text-lg font-semibold mb-4">Belastning per anställd</h3>
         <ResponsiveContainer width="100%"  height={400}>
           <BarChart data={data}>
             <XAxis dataKey="employee" />

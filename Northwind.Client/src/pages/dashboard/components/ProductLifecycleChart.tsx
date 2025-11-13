@@ -61,7 +61,7 @@ export default function ProductLifecycleCard({ settings, data }: Props) {
 
   return (
     <Card>
-      <CardContent className="p-6">
+            <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">{settings.title}</h2>
 
@@ -95,7 +95,7 @@ export default function ProductLifecycleCard({ settings, data }: Props) {
                   value.toLocaleString("sv-SE", {
                     minimumFractionDigits: 1,
                     maximumFractionDigits: 1,
-                  }) + " kr"
+                  }) + "$"
                 }
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
