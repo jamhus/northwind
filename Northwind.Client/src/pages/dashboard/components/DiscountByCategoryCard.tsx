@@ -1,7 +1,9 @@
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  type TooltipProps
 } from "recharts";
 import { Card, CardContent } from "../../../components/ui/Card";
+import CustomDiscCatTooltip from "./childs/CustomDiscCatTooltip";
 
 type DiscountCategoryData = {
   discount: string;
@@ -55,10 +57,8 @@ export default function DiscountByCategoryCard({ settings, data }: Props) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="discount" />
             <YAxis />
-            <Tooltip
-              formatter={(v: number) => `$${v.toLocaleString()}`}
-              labelFormatter={(l) => `Rabatt: ${l}`}
-            />
+            <Tooltip content={<CustomDiscCatTooltip />} />
+
             <Legend />
             {Object.entries(categoryMap).map(([safeKey, original], i) => (
               <Bar
