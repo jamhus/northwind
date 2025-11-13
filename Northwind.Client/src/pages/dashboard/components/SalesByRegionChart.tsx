@@ -27,7 +27,7 @@ export default function SalesPerRegionChart({ settings, data = [] }: Props) {
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => `${v.toLocaleString()} ${settings.suffix}`} />
+              <Tooltip formatter={(v: number) => `${v.toLocaleString()}$`} />
             </PieChart>
           </ResponsiveContainer>
       </CardContent>
