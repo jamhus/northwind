@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
@@ -29,10 +36,5 @@
 	<Copy SourceFiles="..\Northwind.Client\src\structures\compactDashboard.json" DestinationFolder="Structures\" SkipUnchangedFiles="true" />
 
 </Target>
-
-
-	<ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
 
 </Project>
